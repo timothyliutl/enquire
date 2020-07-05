@@ -11,35 +11,76 @@
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: blueviolet;">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <a class="navbar-brand" href="">enQuire</a>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" href="">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link">First Year</a>
+                </li>
+
+                <li class="nav-item active">
+                    <a href="" class="nav-link">Ask a Question</a>
+                </li>
 
 
-    <div class="form-group" style="margin-left: 100px;">
-        <form action="/question-compositions" method="POST">
-            <h1>Question Composition</h1>
-            <h2>Today is <%= date %> </h2>
-            <input name="title" type="text" style="margin-bottom: 15px; width: 500px;" placeholder="Title" autocomplete="off">
-            
-            <br>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="" class="nav-link">My Profile</a>
+                </li>
+            </ul>
 
-            <textarea name="questionBody" id="exampleFormControlTextarea1" rows="4" style="height: 129px; width: 500px;"
-                placeholder="Question Body"></textarea>
-            
+        </div>
+
+
+
+    </nav>
+    <div class="row" style="margin-left: 100px; margin-right: 100px;">
+        <div class="form-group col-lg-6">
+            <form action="/question-compositions" method="POST">
+                <h1>Question Composition</h1>
+                <h2>Today is <%= date %> </h2>
+                <input class="form-control" name="title" type="text" style="margin-bottom: 15px; " placeholder="Title"
+                    autocomplete="off">
+
                 <br>
 
-            <input name="tags" type="text" style="margin-top: 15px; width: 500px;" placeholder="Subject and Tags">
-            
-            <br>
-            
-            <input type="checkbox" class="form-check-input" id="examplecheckbox">
-            <label for="examplecheckbox"> I agree to the Terms of Service</label>
-            
-            <br>
-            
-            <button type="submit">Submit</button>
-        
-        </form>
+                <textarea name="questionBody" class="form-control" id="exampleFormControlTextarea1" rows="4"
+                    style="height: 429px; " placeholder="Question Body"></textarea>
 
+                <br>
+
+                <input name="tags" class="form-control" type="text" style="margin-top: 15px; "
+                    placeholder="Subject and Tags">
+
+                <br>
+
+                <input type="checkbox" class="form-check-input" id="examplecheckbox">
+                <label for="examplecheckbox"> I agree to the Terms of Service</label>
+
+
+
+                <button type="submit" class="btn btn-outline-success">Submit</button>
+
+            </form>
+
+        </div>
+        <div class="col-lg-6">
+            <h2>Remember to read the Terms of Service Before Posting</h2>
+            <br>
+            <label for="preview">Question Preview</label>
+            <textarea name="preview" id="" class="form-control" rows="10" readonly>Text and Formula Preview</textarea>
+        </div>
     </div>
+
 
 </body>
 
