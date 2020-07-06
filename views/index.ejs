@@ -47,14 +47,13 @@
         <div class="form-group col-lg-8">
             <form action="/question-compositions" method="POST">
                 <h1>Question Composition</h1>
-                <h2>Today is <%= date %> </h2>
                 <input class="form-control" name="title" type="text" style="margin-bottom: 15px; " placeholder="Title"
                     autocomplete="off">
 
                 <br>
 
                 <textarea name="questionBody" class="form-control" id="exampleFormControlTextarea1" rows="4"
-                    style="height: 429px; " placeholder="Question Body"></textarea>
+                    style="height: 450px; resize: none;" placeholder="Question Body"></textarea>
 
                 <br>
 
@@ -81,8 +80,8 @@
         </div>
     </div>
 
-    <footer class="sticky-footer" style="background-color: blueviolet; bottom: 0;">
-        <div class="footer-copyright text-center py-3">
+    <footer class="sticky-footer" style="background-color: blueviolet; bottom: 0; position: fixed; width: 100%;">
+        <div class="footer-copyright text-center py-3 footer" style="bottom: 0;">
             Copyright 2020 LOLOLOLOLOLOL
         </div>
     </footer>
