@@ -10,7 +10,7 @@
     <title>Form Inputs</title>
 </head>
 
-<body>
+<body style="margin-bottom: 100px;">
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: blueviolet; margin-bottom: 50px;">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,14 +58,18 @@
                 <br>
 
                 <input name="tags" class="form-control" type="text" style="margin-top: 15px; "
-                    placeholder="Subject and Tags">
+                    placeholder="Subject and Tags" autocomplete="off">
 
                 <br>
+                <select class="form-control" name="course" style="width: 50%; margin-right: 20px;">
+                    <% for (i in courselist){ %>
+                    <option> <%= courselist[i] %></option>
+                    <% } %>
 
-                <input type="checkbox" class="form-check-input" id="examplecheckbox">
-                <label for="examplecheckbox"> I agree to the Terms of Service</label>
+                </select>
 
-
+                <input type="checkbox" class="form-check-input" id="examplecheckbox" style="margin-top: 20px;">
+                <label for="examplecheckbox" style="margin-top: 20px;"> I agree to the Terms of Service</label>
 
                 <button type="submit" class="btn btn-outline-success">Submit</button>
 

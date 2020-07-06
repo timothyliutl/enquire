@@ -1,0 +1,14 @@
+h1{
+    font-family: 'Roboto', sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.center{
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+    
+}
+button{margin: 10px;}
