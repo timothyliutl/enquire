@@ -1,3 +1,4 @@
+//This chunk of code is used to set up all of the dependencies 
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -22,7 +23,7 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true, minlength: 5 },
   password: String
 });
-//Do not make password required here
+//Do not make password required here, fore some reason it doesn't work with passport
 
 userSchema.plugin(passportLocalMongoose);
 
@@ -36,6 +37,7 @@ app.use(express.static("public"));
 app.use(
   session({
     secret: "endoplasmic retticulum",
+    //Make sure to put secret in .env in the future
     resave: false,
     saveUninitialized: false,
   })
@@ -69,12 +71,17 @@ var response = {};
 //TODO: add this array to the database and not have it hardcoded in here
 var courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
 
-app.get("/", function (req, res) {
+
+
+
+//Everything below this comment are functions that run when a website is loaded
+
+app.get("/question", function (req, res) {
     console.log(req.isAuthenticated());
   if (req.isAuthenticated()) {
     res.render("index", { date: days[day.getDay()], courselist: courses });
   } else {
-    res.redirect("/register");
+    res.redirect("/login");
   }
 });
 
@@ -96,9 +103,7 @@ app.post("/question-compositions", function (req, res) {
   });
 });
 
-//sends the login html, more to be done here
-//TODO: add authentication and encryption
-//TODO: add redirect for people who want to create a new account
+
 app.get("/login", function (req, res) {
   res.sendFile(__dirname + "/HTML/login.html", function (err) {
     if (err) {
@@ -108,10 +113,25 @@ app.get("/login", function (req, res) {
 });
 
 //TODO: redirect to profile page template with approriate information
-//Curently just redirects to a dummy page
+//Curently just redirects to the question composition page
 app.post("/login", function (req, res) {
-  console.log(req.body.username);
-  res.send("Thank You for Logging In");
+  const user = new User({
+    username: req.body.username,
+    password: req.body.password
+  });
+
+
+  req.login(user, function(err){
+    
+    if(err){
+      console.log(err);
+    }else{
+      //why can user be interchangble replaced with passport?
+      User.authenticate("local")(req, res, function(){
+        res.redirect('/question');
+      });
+    }
+  });
 });
 
 app.get("/register", function (req, res) {
@@ -124,7 +144,9 @@ app.get("/register", function (req, res) {
 
 app.post("/register", function (req, res) {
   User.register(
-    { username: req.body.username},
+    //This used to be a javascript object, but to follow documentation
+    //on mongoose passport local, I just put the username string as the first parameter
+    req.body.username,
     req.body.password,
     function (err, user) {
       if (err) {
@@ -132,13 +154,18 @@ app.post("/register", function (req, res) {
         res.redirect("/register");
       } else {
         passport.authenticate("local")(req, res, function () {
-          res.redirect("/");
+          res.redirect("/question");
         });
       }
     }
   );
   
 });
+
+app.get('/logout', function(req,res){
+  req.logout();
+  res.redirect('/login');
+})
 
 //Tells what port the website should be running on
 app.listen(3000, function () {

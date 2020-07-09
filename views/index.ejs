@@ -35,7 +35,12 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <a href="" class="nav-link">My Profile</a>
+                    
                 </li>
+                <li class="nav-item">
+                     <a href="/logout" class="nav-link">Logout</a>
+                </li>
+               
             </ul>
 
         </div>
@@ -47,20 +52,22 @@
         <div class="form-group col-lg-8">
             <form action="/question-compositions" method="POST">
                 <h1>Question Composition</h1>
-                <input class="form-control" name="title" type="text" style="margin-bottom: 15px; " placeholder="Title"
+                <h4 style="margin-top: 50px;">Title</h4>
+                <input class="form-control" name="title" type="text" style="margin-bottom: 15px; " placeholder="eg: Integration by Parts"
                     autocomplete="off">
 
                 <br>
-
+                <h4>Question Body</h4>
                 <textarea name="questionBody" class="form-control" id="exampleFormControlTextarea1" rows="4"
-                    style="height: 450px; resize: none;" placeholder="Question Body"></textarea>
+                    style="height: 450px; resize: none;" placeholder="Insert Relevant Formulas and Work You Have Done so Far"></textarea>
 
                 <br>
-
+                <h4>Tags</h4>
                 <input name="tags" class="form-control" type="text" style="margin-top: 15px; "
-                    placeholder="Subject and Tags" autocomplete="off">
+                    placeholder="eg: Eigenvectors, Derivatives. Make sure to separate each tag with a comma" autocomplete="off">
 
                 <br>
+                <h4>Course</h4>
                 <select class="form-control" name="course" style="width: 50%; margin-right: 20px;">
                     <% for (i in courselist){ %>
                     <option> <%= courselist[i] %></option>
@@ -71,7 +78,7 @@
                 <input type="checkbox" class="form-check-input" id="examplecheckbox" style="margin-top: 20px;">
                 <label for="examplecheckbox" style="margin-top: 20px;"> I agree to the Terms of Service</label>
 
-                <button type="submit" class="btn btn-outline-success">Submit</button>
+                <button type="submit" id="submitButton" class="btn btn-outline-success" disabled>Submit</button>
 
             </form>
 
@@ -80,7 +87,15 @@
             <h2>Remember to read the Terms of Service Before Posting</h2>
             <br>
             <label for="preview">Question Preview</label>
-            <textarea name="preview" id="" class="form-control" rows="10" readonly>Text and Formula Preview</textarea>
+            <textarea name="preview" id="textareapreview" class="form-control" rows="10" readonly>Text and Formula Preview</textarea>
+           
+            <h3 style="margin-top: 75px;">Tips for Composing Your Question</h3>
+            <ul>
+                <li>Be Concise</li>
+                <li>Look for similar questions</li>
+                <li>Google it first</li>
+                <li>Include All Your Work and Steps</li>
+            </ul>
         </div>
     </div>
 
@@ -89,6 +104,8 @@
             Copyright 2020 LOLOLOLOLOLOL
         </div>
     </footer>
+    <script src="src/form.js"></script>
+    <!-- Need to put the location in reference of the public folder -->
 </body>
 
 </html>
