@@ -76,6 +76,12 @@ var courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
 
 //Everything below this comment are functions that run when a website is loaded
 
+app.get("/", function(req,res){
+  
+    res.sendFile(__dirname + "/HTML/home-notloggedin.html");
+  
+});
+
 app.get("/question", function (req, res) {
     console.log(req.isAuthenticated());
   if (req.isAuthenticated()) {
@@ -146,7 +152,8 @@ app.post("/register", function (req, res) {
   User.register(
     //This used to be a javascript object, but to follow documentation
     //on mongoose passport local, I just put the username string as the first parameter
-    req.body.username,
+    //Update: for some reason the object has to stay here, probably because the username was stored in a javascript object too
+    {username: req.body.username},
     req.body.password,
     function (err, user) {
       if (err) {
