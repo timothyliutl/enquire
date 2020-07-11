@@ -15,4 +15,5 @@ const questionBody = document.getElementById("exampleFormControlTextarea1").addE
     //could be an issue with the "input" event listener, may not work depending on the browser
     document.getElementById("textareapreview").innerHTML = document.getElementById("exampleFormControlTextarea1").value;
     MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    //preview is a bit glitchy when typing in real time, could do something about this in the future
 });
