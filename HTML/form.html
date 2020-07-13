@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
+    <!-- Stylesheet location is different since we don't need to say its from the public folder, node and express will automatically search in the public folder therefore 
+    only need to reference the CSS folder and file-->
+    <title>Question Form</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: blueviolet; margin-bottom: 50px;">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <a class="navbar-brand" href="/">enQuire</a>
+        </div>
+    </nav>
+    <h1 style="text-align: center;">Question Form</h1>
+    <hr/>
+    <div class="col-lg-5" style="margin-right: auto; margin-left: auto; align-items: center;">
+        <h2 style="text-align: center;">Ask a New Question:</h2>
+        <form name="login_information" class="form-group" method="POST">
+            <input type="text" class="form-control" placeholder="Enter Post Name" style="margin-bottom: 20px;" name="name">
+            <textarea class="span12" rows="10" placeholder="Enter Question" style="min-width: 100%" required></textarea>
+            <!--input type="text" class="form-control" placeholder="Enter Question" name="content"-->
+        </form>
+        <div class="row justify-content-center" style="margin-top: 10px;">
+            <button type="submit" class="bbtn btn-secondary btn-lg">POST</button>
+        </div>
+    </div>
+    <hr/>
+    <div class="col-lg-4" style="margin-right: auto; margin-left: auto; align-items: center;">
+        <h2 style="text-align: center;">Existing Questions:</h2>
+    </div>
+
+
+
+</body>
+
+</html>
