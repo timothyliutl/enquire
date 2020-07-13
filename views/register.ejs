@@ -28,7 +28,9 @@
         <h1 style="text-align: center;">Register Screen</h1>
         <form action="/register" name="login_information" class="form-group" method="POST">
         <input type="text" class="form-control" placeholder="Enter Username" style="margin-bottom: 20px;" name="username">
+        <input style="margin-bottom: 20px;" type="email" class="form-control" placeholder="Enter Email Address" name="email">
         <input type="password" class="form-control" placeholder="Enter Password" name="password">
+        
         
         <div class="row justify-content-center" style="margin-top: 10px;">
             
@@ -36,7 +38,9 @@
             <button type="button" class="btn btn-primary mb-2" id="login-redirect" onclick="location.href = '/login'">Login</button>
            
         </div>
-        
+        <div class="row justify-content-center">
+            <%= error %>
+        </div>
         </form>
     </div>
 <div>

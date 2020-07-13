@@ -16,12 +16,17 @@ const responseSchema = mongoose.Schema({
     required: true,
   },
   body: String,
+  subject: String,
   tags: String,
+  course: String,
+  author: String,
+  time: Date
 });
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, minlength: 5 },
-  password: String
+  password: String,
+  email: String
 });
 //Do not make password required here, fore some reason it doesn't work with passport
 
@@ -93,10 +98,15 @@ app.get("/question", function (req, res) {
 
 //After submit button is hit, the code inside here runs and saves all the date into the database, also console logs the information too
 app.post("/question-compositions", function (req, res) {
+  var date = new Date();
   const question = new DBresponse({
     title: req.body.title,
     body: req.body.questionBody,
     tags: req.body.tags,
+    course: req.body.course,
+    date: date,
+    author: req.user.username
+
   });
   question.save();
   console.log(req.body.title);
@@ -141,11 +151,8 @@ app.post("/login", function (req, res) {
 });
 
 app.get("/register", function (req, res) {
-  res.sendFile(__dirname + "/HTML/register.html", function (err) {
-    if (err) {
-      console.log(err);
-    }
-  });
+  res.render('register', {error: ''});
+
 });
 
 app.post("/register", function (req, res) {
@@ -153,12 +160,12 @@ app.post("/register", function (req, res) {
     //This used to be a javascript object, but to follow documentation
     //on mongoose passport local, I just put the username string as the first parameter
     //Update: for some reason the object has to stay here, probably because the username was stored in a javascript object too
-    {username: req.body.username},
+    {username: req.body.username, email: req.body.email},
     req.body.password,
     function (err, user) {
       if (err) {
         console.log(err);
-        res.redirect("/register");
+        res.render('register',{error: err});
       } else {
         passport.authenticate("local")(req, res, function () {
           res.redirect("/question");
