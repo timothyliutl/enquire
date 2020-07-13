@@ -20,7 +20,7 @@ const responseSchema = mongoose.Schema({
   tags: String,
   course: String,
   author: String,
-  time: Date
+  date: Date
 });
 
 const userSchema = new mongoose.Schema({
