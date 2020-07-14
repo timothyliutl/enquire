@@ -87,6 +87,15 @@ app.get("/", function(req,res){
   
 });
 
+app.get('/home', function(req,res){
+  if(req.isAuthenticated){
+    res.render('home',{});
+  }else{
+    res.redirect('/login');
+  }
+  
+});
+
 app.get("/question", function (req, res) {
     console.log(req.isAuthenticated());
   if (req.isAuthenticated()) {
