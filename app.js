@@ -6,6 +6,10 @@ const app = express();
 const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
+var ObjectId = require('mongodb').ObjectID;
+
+
+//replace this later with the actual list from the database
 
 //Tells program which mongodb database to be looking for
 
@@ -75,6 +79,7 @@ var response = {};
 
 //TODO: add this array to the database and not have it hardcoded in here
 var courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
+var dummyresponselist = [{ "_id" : ObjectId("5f0cb54497676a73bc9b21c0"), "title" : "qwerty", "body" : "qwerweqrwqe", "tags" : "wqerweqr", "course" : "APSC 172", "date" : new Date(), "author" : "tliu2023", "__v" : 0 },{ "_id" : ObjectId("5f0cb54497676a73bc9b21c0"), "title" : "qwerty", "body" : "qwerweqrwqe", "tags" : "wqerweqr", "course" : "APSC 172", "date" : new Date(), "author" : "tliu2023", "__v" : 0 },{ "_id" : ObjectId("5f0cb54497676a73bc9b21c0"), "title" : "qwerty", "body" : "qwerweqrwqe", "tags" : "wqerweqr", "course" : "APSC 172", "date" : new Date(), "author" : "tliu2023", "__v" : 0 },{ "_id" : ObjectId("5f0cb54497676a73bc9b21c0"), "title" : "qwerty", "body" : "qwerweqrwqe", "tags" : "wqerweqr", "course" : "APSC 172", "date" : new Date(), "author" : "tliu2023", "__v" : 0 }];
 
 
 
@@ -88,8 +93,9 @@ app.get("/", function(req,res){
 });
 
 app.get('/home', function(req,res){
-  if(req.isAuthenticated){
-    res.render('home',{});
+  if(req.isAuthenticated()){
+    //remember the () after the is authenticated, will always return true unless you call the function
+    res.render('home',{list: dummyresponselist});
   }else{
     res.redirect('/login');
   }
