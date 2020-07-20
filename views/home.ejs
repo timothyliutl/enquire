@@ -66,9 +66,11 @@
                 
             </div>
             <div class="card-footer">
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item">User: <%= list[i].author%></li>
-                    <li class="list-group-item">Date: <%=list[i].date.getMonth()%></li>
+                <ul class="list-inline">
+                    <li class="list-inline-item">User: <a href="">
+                        <%= list[i].author%>
+                    </a></li>
+                    <li class="list-inline-item">Date: <%=list[i].date.getMonth()%></li>
                 </ul>
               
             </div>
