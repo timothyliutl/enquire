@@ -41,22 +41,36 @@
 
 
 
-    <div class="content col-lg-6" style="margin-left: 10%; margin-top: 20px; margin-bottom: 20px; width: 50%;">
+    <div class="content col-lg-6" style="margin-left: 0%; margin-top: 20px; margin-bottom: 20px; width: 50%;">
         <!-- Need to have an array of objects in here and a for loop-->
         <% for(i in list){ %>
         <div class="card" style="margin-top: 20px;">
             <div class="card-header">
-                <h1><%=list[i].title%></h1>
+                <h1><%=list[i].course%></h1>
             </div>
             <div class="card-body">
-                <p>
-                    Question: <%= list[i].body.substring(0,50) %>
+                
+                
+                    <h5 class="card-title">
+                        <%= list[i].title%>
+                    </h5>
+                    <p class="card-text">
+                    <%= list[i].body.substring(0,500) %>
+                    <% if(list[i].body.length>500){%>
+                        ...
+                    <% } %>
                 </p>
-                <ul>
-                    <li>Subject: <%= list[i].course%></li>
-                    <li>User: <%= list[i].author%></li>
-                    <li>Date: <%=list[i].date.getMonth()%></li>
+                   
+                   
+                    
+                
+            </div>
+            <div class="card-footer">
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item">User: <%= list[i].author%></li>
+                    <li class="list-group-item">Date: <%=list[i].date.getMonth()%></li>
                 </ul>
+              
             </div>
         </div>
         <% } %>
