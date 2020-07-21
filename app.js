@@ -82,7 +82,17 @@ var courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
 
 //This is where we want to compile data from the database into a list, right now the ejs file is 
 //expecting a list of javascript objects as shown below, this should model the objects already in the response database
-var dummyresponselist = [{ "_id" : ObjectId("5f0cb54497676a73bc9b21c0"), "title" : "qwerty", "body" : "Lomography is the commercial trademark of Lomographische AG, Austria for products and services catering to lo-fi photographers. The name is inspired by the former state-run optics manufacturer LOMO PLC of Saint Petersburg, Russia. LOMO PLC created and produced the 35mm LOMO LC-A Compact Automat camera — which became the centerpiece of Lomography’s marketing and sales activities. This camera was loosely based upon the Cosina CX-1 and introduced in the early 1980s. In 1991, the Austrian founders of Lomography discovered the Lomo LC-A. They were “charmed by the unique, colorful, and sometimes blurry” images that the camera produced. After a series of international art exhibitions and marketing, Lomography signed an exclusive distribution agreement with LOMO PLC — thereby becoming the sole distributor of all Lomo LC-A cameras outside of the Soviet Union. Since the introduction of the original Lomo LC-A, Lomography has produced and marketed various lines of branded analogue cameras. Most of these cameras are designed to produce a single photographic effect. In 2005, production of the original Lomo LC-A was discontinued. Its replacement, the LC-A+, was introduced in Fall 2006. The new camera, made in China rather than Russia, featured the original Russian lens manufactured by LOMO PLC. This changed as of mid-2007 with the lens now made in China as well. Similar to Eastman Kodak’s concept of the “Kodak moment”, the Lomography website endorses a motto of “Don’t Think, Just Shoot”. This motto is accompanied by the Ten Golden Rules of Lomography; guidelines encouraging spontaneity and minimal consideration of formal technique. The cameras marketed by Lomography are generally low-fidelity and inexpensively constructed. Some cameras make use of multiple lenses and colored flashes, or exhibit optic", "tags" : "wqerweqr", "course" : "APSC 172", "date" : new Date(), "author" : "tliu2023", "__v" : 0 },{ "_id" : ObjectId("5f0cb54497676a73bc9b21c0"), "title" : "qwerty", "body" : "qwerweqrwqe", "tags" : "wqerweqr", "course" : "APSC 172", "date" : new Date(), "author" : "tliu2023", "__v" : 0 },{ "_id" : ObjectId("5f0cb54497676a73bc9b21c0"), "title" : "qwerty", "body" : "qwerweqrwqe", "tags" : "wqerweqr", "course" : "APSC 172", "date" : new Date(), "author" : "tliu2023", "__v" : 0 },{ "_id" : ObjectId("5f0cb54497676a73bc9b21c0"), "title" : "qwerty", "body" : "qwerweqrwqe", "tags" : "wqerweqr", "course" : "APSC 172", "date" : new Date(), "author" : "tliu2023", "__v" : 0 }];
+var dummyresponselist = [];
+DBresponse.find({}).lean().exec(function(err,doc){
+  if(err){
+    console.log(err);
+  }
+  dummyresponselist = doc;
+ console.log(doc);
+  
+});
+console.log(dummyresponselist);
+
 
 
 
@@ -203,6 +213,18 @@ app.post("/register", function (req, res) {
 app.get('/logout', function(req,res){
   req.logout();
   res.redirect('/login');
+});
+
+app.get("/user/:userID", function(req,res){
+  //req.params.ID will be the username and will be used to get user specific information from the database into the profile page
+  User.findOne({username: req.params.userID}, function(err, doc){
+    if(err){
+      console.log(err);
+    }
+    res.send(doc.email);
+
+  });
+
 });
 
 app.get("*", function(req,res){
