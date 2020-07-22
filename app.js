@@ -185,11 +185,17 @@ app.post("/login", function (req, res) {
 });
 
 app.get("/register", function (req, res) {
-  res.render('register', {error: ''});
+  if(req.isAuthenticated()){
+    res.redirect('/home')
+  }else{
+    res.render('register', {error: ''});
+  }
+  
 
 });
 
 app.post("/register", function (req, res) {
+  
   User.register(
     //This used to be a javascript object, but to follow documentation
     //on mongoose passport local, I just put the username string as the first parameter
