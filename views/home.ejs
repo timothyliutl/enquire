@@ -24,6 +24,7 @@
     <div class="row">
 
         <div class="col-lg-3 sidebar menu sticky-top" style="width: 250px;">
+            <!-- Make sure to have the width here or else the cards will go underneath the sidebar-->
             <nav class="wrapper bg-light border-right" style="margin-left: 20px; padding-right: 20px; height: 100%; position: fixed;">
 
                 <div class="sidebar-header">
@@ -42,7 +43,7 @@
 
 
 
-    <div class="content col-lg-6 col-md-auto" style="margin-top: 20px; margin-bottom: 20px; width: 50%;">
+    <div class="content col-lg-6 col-md-auto" style="margin-top: 20px; margin-bottom: 20px; width: 50%; margin-left: 0; margin-right: auto;">
         <button class="btn btn-success">Open Sidebar</button>
         <!-- Need to have an array of objects in here and a for loop-->
         <% for(i in list){ %>
