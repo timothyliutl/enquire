@@ -16,13 +16,14 @@
     </script>
     <script type="text/javascript"
         src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body style="overflow-x: hidden;">
     <%- include('partials/navbar.ejs')%>
     <div class="row">
 
-        <div class="col-lg-3 sidebar menu sticky-top">
+        <div class="col-lg-3 sidebar menu sticky-top" style="width: 250px;">
             <nav class="wrapper bg-light border-right" style="margin-left: 20px; padding-right: 20px; height: 100%; position: fixed;">
 
                 <div class="sidebar-header">
@@ -41,7 +42,8 @@
 
 
 
-    <div class="content col-lg-6" style="margin-left: 0%; margin-top: 20px; margin-bottom: 20px; width: 50%;">
+    <div class="content col-lg-6 col-md-auto" style="margin-top: 20px; margin-bottom: 20px; width: 50%;">
+        <button class="btn btn-success">Open Sidebar</button>
         <!-- Need to have an array of objects in here and a for loop-->
         <% for(i in list){ %>
         <div class="card" style="margin-top: 20px;">
@@ -67,7 +69,7 @@
             </div>
             <div class="card-footer">
                 <ul class="list-inline">
-                    <li class="list-inline-item">User: <a href="">
+                    <li class="list-inline-item">User: <a href="/user/<%=list[i].author%>">
                         <%= list[i].author%>
                     </a></li>
                     <li class="list-inline-item">Date: <%=list[i].date%></li>
@@ -81,5 +83,6 @@
 </div>
 
 </body>
+<script src="src/sidebar.js"></script>
 
 </html>

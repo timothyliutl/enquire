@@ -88,10 +88,10 @@ DBresponse.find({}).lean().exec(function(err,doc){
     console.log(err);
   }
   dummyresponselist = doc;
- console.log(doc);
+ //console.log(doc);
   
 });
-console.log(dummyresponselist);
+//Looks like the code runs and after it runs through once, it runs the find function (probably an async function)
 
 
 
@@ -225,6 +225,11 @@ app.get("/user/:userID", function(req,res){
 
   });
 
+});
+
+//Need to find a way to pass in the question ID to the ejs file and from the ejs file to a redirectable link
+app.get("/view-question", function(req,res){
+res.render("question");
 });
 
 app.get("*", function(req,res){
