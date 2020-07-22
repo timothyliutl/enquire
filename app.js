@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
   password: String,
   email: String
 });
-//Do not make password required here, fore some reason it doesn't work with passport
+//Do not make password required here, for some reason it doesn't work with passport
 
 userSchema.plugin(passportLocalMongoose);
 
@@ -140,11 +140,12 @@ app.post("/question-compositions", function (req, res) {
   console.log(req.body.title);
   response = req.body;
   console.log(response);
-  res.render("preview", {
+  /*res.render("preview", {
     title: response.title,
     body: response.questionBody,
     tags: response.tags,
-  });
+  });*/
+  res.redirect('/home');
 });
 
 
