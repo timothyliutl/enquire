@@ -11,7 +11,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "md5": "^2.2.1",
-    "mongoose": "^5.9.21",
+    "mongoose": "^5.9.25",
     "mongoose-encryption": "^2.0.2",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
