@@ -83,7 +83,9 @@ var courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
 //This is where we want to compile data from the database into a list, right now the ejs file is 
 //expecting a list of javascript objects as shown below, this should model the objects already in the response database
 var dummyresponselist = [];
-DBresponse.find({}).lean().exec(function(err,doc){
+
+function getQuestions(){
+  DBresponse.find({}).lean().exec(function(err,doc){
   if(err){
     console.log(err);
   }
@@ -92,7 +94,10 @@ DBresponse.find({}).lean().exec(function(err,doc){
   
 });
 //Looks like the code runs and after it runs through once, it runs the find function (probably an async function)
+}
 
+
+getQuestions();
 
 
 
@@ -116,8 +121,9 @@ app.get('/home', function(req,res){
 });
 
 app.get("/question", function (req, res) {
-    console.log(req.isAuthenticated());
+    
   if (req.isAuthenticated()) {
+    getQuestions();
     res.render("index", { date: days[day.getDay()], courselist: courses });
   } else {
     res.redirect("/login");
@@ -235,8 +241,15 @@ app.get("/user/:userID", function(req,res){
 });
 
 //Need to find a way to pass in the question ID to the ejs file and from the ejs file to a redirectable link
-app.get("/view-question", function(req,res){
+app.get("/view-question/:questionID", function(req,res){
 res.render("question");
+});
+
+app.post('/view-question/:questionID', function(req,res){
+var replytext = req.body.response;
+console.log(replytext);
+res.redirect("/home");
+//Works, now just need to get the database to work with it
 });
 
 app.get("*", function(req,res){
@@ -248,3 +261,7 @@ app.listen(3000, function () {
   console.log("Server running on Port 3000");
 });
 //const in JS for things inside a variable aren't always constant, the variable itself just can't be reassigned
+
+//Next Things to work on, adding parameters to hyperlinks for the questions
+//Work on adding templating to the ejs files
+//Find out how to upload images to mongo database

@@ -1,13 +1,41 @@
-<div class="col-lg-3 sidebar sticky-top">
-    <nav class="wrapper bg-light border-right" style="margin-left: 20px; padding-right: 20px; height: 100%; position: absolute;">
+<div class="col-lg-3 sidebar menu sticky-top" style="width: 250px;">
+            
+    <!-- Make sure to have the width here or else the cards will go underneath the sidebar-->
+    <nav class="wrapper bg-light border-right" style="margin-left: 0px; padding-right: 20px; height: 100%; position: fixed; width: 250px;">
 
         <div class="sidebar-header">
-            <h3>Enquire Menu</h3>
+            <h3 style = "margin-bottom: 5px; text-align: center;">Menu</h3>
+            <hr>
+            <!--
+                 <p style = "font-size: 10px; font-weight: 50px;">_______________________________</p>
+                 hr looks better but left this line in the comments
+            -->
+           
         </div>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" href="" style="color:#0058AB;">First Year Questions</a>
-            </li>
+        <ul class="nav flex-column" style="margin-left: 20px;">
+            <!-- <div class="dropdown"> -->
+                <!-- <li class="nav-item"> -->
+                    <!-- <a class="nav-link" href="" style="color:#0058AB;">First Year courses</a> -->
+                <!-- </li> -->
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-bottom:5px">First Year Courses
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-container" style="text-align: center;">
+                    <a href="#">APSC 171</a>
+                    <!-- <a href="#">APSC 131</a>
+                    <a href="#">APSC 111</a>
+                    <a href="#">APSC 101</a> -->
+                </div>
+            <!-- </div> -->
+            <button class="dropdown-btn" style="margin-bottom:5px">200 Level Courses
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <button class="dropdown-btn" style="margin-bottom:5px">300 Level Courses
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <button class="dropdown-btn" style="margin-bottom:5px">400 Level Courses
+                <i class="fa fa-caret-down"></i>
+            </button>
         </ul>
 
 
