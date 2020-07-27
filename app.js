@@ -112,6 +112,9 @@ app.get("/", function(req,res){
 
 app.get('/home', function(req,res){
   if(req.isAuthenticated()){
+    getQuestions();
+    //This function here might cause some issues
+    //Can solve question home screen issue by redirecting to the question specific page first then have the user redirect to the home screen
     //remember the () after the is authenticated, will always return true unless you call the function
     res.render('home',{list: dummyresponselist});
   }else{
@@ -119,6 +122,19 @@ app.get('/home', function(req,res){
   }
   
 });
+
+app.get('/home/page/:pagenum', function(req,res){
+if(req.isAuthenticated()){
+  res.render('home',{list: dummyresponselist});
+}
+}); 
+
+app.get('/home/query/:course', function(req,res){
+if(res.isAuthenticated()){
+  res.send(req.params.course);
+}
+});
+
 
 app.get("/question", function (req, res) {
     
@@ -265,3 +281,4 @@ app.listen(3000, function () {
 //Next Things to work on, adding parameters to hyperlinks for the questions
 //Work on adding templating to the ejs files
 //Find out how to upload images to mongo database
+//Find how to fix the issue of questions not loading as soon as they are posted (something to do with query not loading in time)
