@@ -5,8 +5,39 @@ const mongoose = require("mongoose");
 const app = express();
 const session = require("express-session");
 const passport = require("passport");
+const multer = require('multer');
 const passportLocalMongoose = require("passport-local-mongoose");
+const path = require('path');
 var ObjectId = require('mongodb').ObjectID;
+
+var storage = multer.diskStorage({
+  destination: './public/uploads',
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+});
+
+var upload = multer({
+  storage: storage,
+  limits: { fileSize: 20000000 },
+  /*fileFilter: function (req, file, cb) {
+checkFileType(file, cb);
+  }*/
+}).single('userimage');
+
+function checkFileType(file, cb){
+  const filetypes = /jpeg|jpg|png|gif/;
+  const extname = filetypes.test(path.extname(file.orginalname).toLowerCase());
+
+  const mimetype = filetypes.test(file.mimetype);
+
+  if(mimetype && extname){
+    return cb(null,true);
+  }else{
+    cb('Error: Images Only!');
+  }
+
+}
 
 
 //replace this later with the actual list from the database
@@ -42,6 +73,7 @@ const User = new mongoose.model("User", userSchema);
 const DBresponse = mongoose.model("Response", responseSchema);
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json()); 
 app.use(express.static("public"));
 app.use(
   session({
@@ -84,16 +116,16 @@ var courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
 //expecting a list of javascript objects as shown below, this should model the objects already in the response database
 var dummyresponselist = [];
 
-function getQuestions(){
-  DBresponse.find({}).lean().exec(function(err,doc){
-  if(err){
-    console.log(err);
-  }
-  dummyresponselist = doc;
- //console.log(doc);
-  
-});
-//Looks like the code runs and after it runs through once, it runs the find function (probably an async function)
+function getQuestions() {
+  DBresponse.find({}).lean().exec(function (err, doc) {
+    if (err) {
+      console.log(err);
+    }
+    dummyresponselist = doc;
+    //console.log(doc);
+
+  });
+  //Looks like the code runs and after it runs through once, it runs the find function (probably an async function)
 }
 
 
@@ -104,40 +136,40 @@ getQuestions();
 
 //Everything below this comment are functions that run when a website is loaded
 
-app.get("/", function(req,res){
-  
-    res.sendFile(__dirname + "/HTML/home-notloggedin.html");
-  
+app.get("/", function (req, res) {
+
+  res.sendFile(__dirname + "/HTML/home-notloggedin.html");
+
 });
 
-app.get('/home', function(req,res){
-  if(req.isAuthenticated()){
+app.get('/home', function (req, res) {
+  if (req.isAuthenticated()) {
     getQuestions();
     //This function here might cause some issues
     //Can solve question home screen issue by redirecting to the question specific page first then have the user redirect to the home screen
     //remember the () after the is authenticated, will always return true unless you call the function
-    res.render('home',{list: dummyresponselist});
-  }else{
+    res.render('home', { list: dummyresponselist });
+  } else {
     res.redirect('/login');
   }
-  
+
 });
 
-app.get('/home/page/:pagenum', function(req,res){
-if(req.isAuthenticated()){
-  res.render('home',{list: dummyresponselist});
-}
-}); 
+app.get('/home/page/:pagenum', function (req, res) {
+  if (req.isAuthenticated()) {
+    res.render('home', { list: dummyresponselist });
+  }
+});
 
-app.get('/home/query/:course', function(req,res){
-if(res.isAuthenticated()){
-  res.send(req.params.course);
-}
+app.get('/home/query/:course', function (req, res) {
+  if (res.isAuthenticated()) {
+    res.send(req.params.course);
+  }
 });
 
 
 app.get("/question", function (req, res) {
-    
+
   if (req.isAuthenticated()) {
     getQuestions();
     res.render("index", { date: days[day.getDay()], courselist: courses });
@@ -148,7 +180,16 @@ app.get("/question", function (req, res) {
 
 //After submit button is hit, the code inside here runs and saves all the date into the database, also console logs the information too
 app.post("/question-compositions", function (req, res) {
-  var date = new Date();
+  console.log(req);
+  upload(req, res, function(err){
+    if(err){
+      console.log(err);
+      res.redirect('/question-compositions');
+    }else{
+      //for some reason body parser cannot get access to req.body unless its inside the multer function
+      //multer can read multi part forms and body parser cannot, its weird but it works
+      console.log(req.file);
+var date = new Date();
   const question = new DBresponse({
     title: req.body.title,
     body: req.body.questionBody,
@@ -168,21 +209,25 @@ app.post("/question-compositions", function (req, res) {
     tags: response.tags,
   });*/
   res.redirect('/home');
+
+    }
+  });
+  
 });
 
 
 app.get("/login", function (req, res) {
-  if(req.isAuthenticated()){
+  if (req.isAuthenticated()) {
     res.redirect('/home');
     //Makes it so someone can't go back to the login screen if they are already logged in
-  }else{
+  } else {
     res.sendFile(__dirname + "/HTML/login.html", function (err) {
-    if (err) {
-      console.log(err);
-    }
-  });
+      if (err) {
+        console.log(err);
+      }
+    });
   }
-  
+
 });
 
 //TODO: redirect to profile page template with approriate information
@@ -194,13 +239,13 @@ app.post("/login", function (req, res) {
   });
 
 
-  req.login(user, function(err){
-    
-    if(err){
+  req.login(user, function (err) {
+
+    if (err) {
       console.log(err);
-    }else{
+    } else {
       //why can user be interchangble replaced with passport?
-      User.authenticate("local")(req, res, function(){
+      User.authenticate("local")(req, res, function () {
         res.redirect('/question');
       });
     }
@@ -208,27 +253,27 @@ app.post("/login", function (req, res) {
 });
 
 app.get("/register", function (req, res) {
-  if(req.isAuthenticated()){
+  if (req.isAuthenticated()) {
     res.redirect('/home')
-  }else{
-    res.render('register', {error: ''});
+  } else {
+    res.render('register', { error: '' });
   }
-  
+
 
 });
 
 app.post("/register", function (req, res) {
-  
+
   User.register(
     //This used to be a javascript object, but to follow documentation
     //on mongoose passport local, I just put the username string as the first parameter
     //Update: for some reason the object has to stay here, probably because the username was stored in a javascript object too
-    {username: req.body.username, email: req.body.email},
+    { username: req.body.username, email: req.body.email },
     req.body.password,
     function (err, user) {
       if (err) {
         console.log(err);
-        res.render('register',{error: err});
+        res.render('register', { error: err });
       } else {
         passport.authenticate("local")(req, res, function () {
           res.redirect("/home");
@@ -236,18 +281,18 @@ app.post("/register", function (req, res) {
       }
     }
   );
-  
+
 });
 
-app.get('/logout', function(req,res){
+app.get('/logout', function (req, res) {
   req.logout();
   res.redirect('/login');
 });
 
-app.get("/user/:userID", function(req,res){
+app.get("/user/:userID", function (req, res) {
   //req.params.ID will be the username and will be used to get user specific information from the database into the profile page
-  User.findOne({username: req.params.userID}, function(err, doc){
-    if(err){
+  User.findOne({ username: req.params.userID }, function (err, doc) {
+    if (err) {
       console.log(err);
     }
     res.send(doc.email);
@@ -257,19 +302,19 @@ app.get("/user/:userID", function(req,res){
 });
 
 //Need to find a way to pass in the question ID to the ejs file and from the ejs file to a redirectable link
-app.get("/view-question/:questionID", function(req,res){
-res.render("question");
+app.get("/view-question/:questionID", function (req, res) {
+  res.render("question");
 });
 
-app.post('/view-question/:questionID', function(req,res){
-var replytext = req.body.response;
-console.log(replytext);
-res.redirect("/home");
-//Works, now just need to get the database to work with it
+app.post('/view-question/:questionID', function (req, res) {
+  var replytext = req.body.response;
+  console.log(replytext);
+  res.redirect("/home");
+  //Works, now just need to get the database to work with it
 });
 
-app.get("*", function(req,res){
-res.render("404errorpage");
+app.get("*", function (req, res) {
+  res.render("404errorpage");
 });
 
 //Tells what port the website should be running on
