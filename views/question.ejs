@@ -1,68 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Enquire Question</title>
-    <%- include('partials/mathjaxandbootstrap')%>
-  </head>
-  <body>
-    <%- include("partials/navbar.ejs") %>
-    <!--
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enquire Question</title>
+  <%- include('partials/mathjaxandbootstrap')%>
+</head>
+
+<body style="overflow-x: hidden;">
+  <%- include("partials/navbar.ejs") %>
+  <!--
         Add 3 columns 2 being rather small and the middle being the largest one
         Find out how to store images to the database
         Create a screen to present profile and a way to edit it (possibly through another screen)
         Get the drop down menu in the navbar to work
     -->
 
-    <div class="row">
-      <%- include("partials/sidebar.ejs")%>
-      <div class="content col-lg-6">
-        <div class="card" style="margin-top: 20px;">
-          <div class="card-header">
-            <h1>Subject</h1>
-          </div>
+  <div class="row">
+    <%- include("partials/sidebar.ejs")%>
+    <div class="content col-lg-7">
+      <div class="card" style="margin-top: 20px;">
+        <div class="card-header">
+          <h1>Subject</h1>
+        </div>
 
-          <div class="card-body">
-            <div class="card-title">
-              <h1>Question Title</h1>
+        <div class="card-body">
+          <div class="card-title">
+            <h1>Question Title</h1>
+          </div>
+          <p>Question Body With Mathjax and Stuff</p>
+        </div>
+        <div class="card-footer">
+          <p>Information about the Question and the user here</p>
+        </div>
+      </div>
+      <hr>
+      <h2>Current Answers</h2>
+      <!-- Example existing responses -->
+      <div class="row">
+        <div class="col-lg-2">
+          
+          <button class="btn" id="question_id_upvote"><img src="https://quicksew.ca/wp-content/uploads/2016/11/queens-jacket-07.jpg" alt="updoots" style="width: 50px;"></button>
+          <h6 style="text-align: center;">0 Tams</h6>
+          <button class="btn" id="question_id_downvote"><img src="https://media-exp1.licdn.com/dms/image/C4E0BAQEsG87VcXgbow/company-logo_200_200/0?e=2159024400&v=beta&t=lBzainxYpW-4LPSKtWrH-IwqRgWKd5DEifiEtbAN2cw" alt="downdoots" style="width: 50px;"></button>
+        </div>
+        <div class="col-lg-10">
+          <div class="card w-100">
+            <div class="card-body">
+              <p>Insert Reply Here</p>
+              <br />
+              <p style="text-align: right;"><a href="">Username Here</a></p>
+              <p style="text-align: right;">Verified Tutor</p>
             </div>
-            <p>Question Body With Mathjax and Stuff</p>
-          </div>
-          <div class="card-footer">
-            <p>Information about the Question and the user here</p>
           </div>
         </div>
-        <hr>
-        <h2>Current Answers</h2>
-        <div class="card w-100" style="margin-top: 20px;">
-          <div class="card-body">
-            <p>Insert Reply Here</p>
-            <br />
-            <p style="text-align: right;"><a href="">Username Here</a></p>
-            <p style="text-align: right;">Verified Tutor</p>
-          </div>
-        </div>
-        
-          <div class="form-group" style="margin-top: 50px;">
-            <label for="responsetextarea">Your Solution</label>
-            <form action="/view-question" method="POST" name="reply">
-                <textarea
-              class="form-control"
-              name="response"
-              id="responsetextarea"
-              cols="30"
-              rows="5"
-              style="resize: none;"
-              placeholder="Post Your Reply Here"
-            ></textarea>
-            <button class="btn btn-success" style="position: absolute; right: 10px; margin-top: 10px;">Post Solution</button>
-            </form>
-            
-            <div></div>
-          </div>
-        </div>
-      
+
+      </div>
+
+
+      <div class="form-group" style="margin-top: 50px;">
+        <label for="responsetextarea">Your Solution</label>
+        <form action="/view-question" method="POST" name="reply">
+          <textarea class="form-control" name="response" id="responsetextarea" cols="30" rows="5" style="resize: none;"
+            placeholder="Post Your Reply Here"></textarea>
+          <button class="btn btn-success" style="position: absolute; right: 10px; margin-top: 10px;">Post
+            Solution</button>
+        </form>
+        <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal" style="position: absolute; left: 10px; margin-top: 10px;">Preview
+          Solution</button>
+
+        <div></div>
+      </div>
     </div>
-  </body>
+
+  </div>
+  <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Response Preview</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p id="modalbodytext"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+  integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+  integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  <script type='text/javascript' src="/src/responsemodal.js"></script>
+</body>
+
+
 </html>
