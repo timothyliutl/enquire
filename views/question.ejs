@@ -19,7 +19,7 @@
 
   <div class="row">
     <%- include("partials/sidebar.ejs")%>
-    <div class="content col-lg-6">
+    <div class="content col-lg-7">
       <div class="card" style="margin-top: 20px;">
         <div class="card-header">
           <h1>Subject</h1>
@@ -39,13 +39,13 @@
       <h2>Current Answers</h2>
       <!-- Example existing responses -->
       <div class="row">
-        <div class="col-lg-1">
+        <div class="col-lg-2">
           
-          <button class="btn"><img src="https://quicksew.ca/wp-content/uploads/2016/11/queens-jacket-07.jpg" alt="updoots" style="width: 50px;"></button>
+          <button class="btn" id="question_id_upvote"><img src="https://quicksew.ca/wp-content/uploads/2016/11/queens-jacket-07.jpg" alt="updoots" style="width: 50px;"></button>
           <h6 style="text-align: center;">0 Tams</h6>
-          <button class="btn"><img src="https://media-exp1.licdn.com/dms/image/C4E0BAQEsG87VcXgbow/company-logo_200_200/0?e=2159024400&v=beta&t=lBzainxYpW-4LPSKtWrH-IwqRgWKd5DEifiEtbAN2cw" alt="downdoots" style="width: 50px;"></button>
+          <button class="btn" id="question_id_downvote"><img src="https://media-exp1.licdn.com/dms/image/C4E0BAQEsG87VcXgbow/company-logo_200_200/0?e=2159024400&v=beta&t=lBzainxYpW-4LPSKtWrH-IwqRgWKd5DEifiEtbAN2cw" alt="downdoots" style="width: 50px;"></button>
         </div>
-        <div class="col-lg-11">
+        <div class="col-lg-10">
           <div class="card w-100">
             <div class="card-body">
               <p>Insert Reply Here</p>
@@ -85,17 +85,19 @@
           </button>
         </div>
         <div class="modal-body">
-          <p id="modalbodytext">Modal body text goes here.</p>
+          <p id="modalbodytext"></p>
         </div>
       </div>
     </div>
   </div>
-</body>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
   integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
   integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
   integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  <script type='text/javascript' src="/src/responsemodal.js"></script>
+</body>
+
 
 </html>
