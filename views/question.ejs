@@ -40,10 +40,50 @@
       <!-- Example existing responses -->
       <div class="row">
         <div class="col-lg-2">
-          
-          <button class="btn" id="question_id_upvote"><img src="https://quicksew.ca/wp-content/uploads/2016/11/queens-jacket-07.jpg" alt="updoots" style="width: 50px;"></button>
-          <h6 style="text-align: center;">0 Tams</h6>
-          <button class="btn" id="question_id_downvote"><img src="https://media-exp1.licdn.com/dms/image/C4E0BAQEsG87VcXgbow/company-logo_200_200/0?e=2159024400&v=beta&t=lBzainxYpW-4LPSKtWrH-IwqRgWKd5DEifiEtbAN2cw" alt="downdoots" style="width: 50px;"></button>
+
+          <button class="btn" id="question_id_upvote"><img
+              src="https://quicksew.ca/wp-content/uploads/2016/11/queens-jacket-07.jpg" alt="updoots"
+              style="width: 50px;"></button>
+          <script>
+            $(document).ready(function () {
+              $("#question_id_upvote").click(function () {
+                $.ajax({
+                  url: '/vote/jsdhf',
+                  type: "POST",
+                  data: { type: "updoot" },
+                  success: function (data) {
+                    console.log(data);
+                    $("#tam_counter").html(data.value + " Tams");
+                  }
+                });
+              });
+            });
+          </script>
+
+
+          <h6 style="text-align: center;" id="tam_counter">0 Tams</h6>
+
+
+          <button class="btn" id="question_id_downvote"><img
+              src="https://media-exp1.licdn.com/dms/image/C4E0BAQEsG87VcXgbow/company-logo_200_200/0?e=2159024400&v=beta&t=lBzainxYpW-4LPSKtWrH-IwqRgWKd5DEifiEtbAN2cw"
+              alt="downdoots" style="width: 50px;"></button>
+          <script>
+            $(document).ready(function () {
+              $("#question_id_downvote").click(function () {
+                $.ajax({
+                  url: '/vote/jsdhf',
+                  type: "POST",
+                  data: { type: "downdoot" },
+                  success: function (data) {
+                    console.log(data);
+                    $("#tam_counter").html(data.value + " Tams");
+                  }
+                });
+              });
+            });
+          </script>
+
+
         </div>
         <div class="col-lg-10">
           <div class="card w-100">
@@ -67,7 +107,8 @@
           <button class="btn btn-success" style="position: absolute; right: 10px; margin-top: 10px;">Post
             Solution</button>
         </form>
-        <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal" style="position: absolute; left: 10px; margin-top: 10px;">Preview
+        <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal"
+          style="position: absolute; left: 10px; margin-top: 10px;">Preview
           Solution</button>
 
         <div></div>
@@ -90,12 +131,14 @@
       </div>
     </div>
   </div>
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-  integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-  integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+    crossorigin="anonymous"></script>
   <script type='text/javascript' src="/src/responsemodal.js"></script>
 </body>
 

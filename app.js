@@ -313,6 +313,23 @@ app.post('/view-question/:questionID', function (req, res) {
   //Works, now just need to get the database to work with it
 });
 
+var updoots = 0;
+//Updoots and downdoots get and post requests
+//Change this in the future so it edits values in the database
+app.post("/vote/:questionID", function(req,res){
+  if(req.body.type=="updoot"){
+    updoots++;
+    res.send({value:updoots});
+  }else{
+    if(req.body.type=="downdoot"){
+      updoots--;
+      res.status(200).send({value: updoots});
+    }
+  }
+  console.log(req.body.type);
+});
+
+
 app.get("*", function (req, res) {
   res.render("404errorpage");
 });
