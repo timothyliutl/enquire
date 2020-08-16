@@ -1,4 +1,5 @@
 //This chunk of code is used to set up all of the dependencies 
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -52,7 +53,7 @@ const questionSchema = new mongoose.Schema({
         required: true,
     },
     author: {
-        type: Number,
+        type: String,
         required: true,
         immutable: true
     },
@@ -152,7 +153,7 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 app.use(
     session({
-        secret: "endoplasmic retticulum",
+        secret: process.env.APP_SECRET,
         //Make sure to put secret in .env in the future
         resave: false,
         saveUninitialized: false,
@@ -166,7 +167,8 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 app.set("view engine", "ejs");
 
-mongoose.connect("mongodb://localhost:27017/form", {
+//console.log(process.env.MONGO_DB);
+mongoose.connect(process.env.MONGO_DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
@@ -373,7 +375,23 @@ app.get("/user/:userID", function(req, res) {
 
 //Need to find a way to pass in the question ID to the ejs file and from the ejs file to a redirectable link
 app.get("/view-question/:questionID", function(req, res) {
-    res.render("question");
+    //Add modal if user has not been logged in
+    if(req.isAuthenticated){
+    DBquestion.findOne({_id: req.params.questionID}, function(err,doc){
+        if(err){
+            console.log(err);
+            res.render("404errorpage");
+        }else{
+            console.log(doc);
+            res.render("question", {question:doc});
+            //need to add a response in the render function too
+        }
+    });    
+    }else{
+        res.redirect('/login');
+    }
+    
+    
 });
 
 app.post('/view-question/:questionID', function(req, res) {

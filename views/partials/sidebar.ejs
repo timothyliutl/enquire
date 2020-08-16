@@ -3,9 +3,11 @@
     <nav class="wrapper bg-light border-right" style="
       margin-left: 0px;
       padding-right: 20px;
-      height: 100%;
+      height: 90%;
+      
       position: fixed;
       width: 250px;
+      overflow-y: scroll;
     ">
         <div class="sidebar-header">
             <h3 style="margin-bottom: 5px; text-align: center;">Menu</h3>
@@ -275,12 +277,38 @@
             </div>
 
             <br />
-            <div class="sidebar-header">
+           
+                <div class="sidebar-header">
                 <h3 style="text-align: center;">Starred Courses</h3>
                 <hr />
-            </div>
-
-            <button class="btn btn-success">Example 1</button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton4"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-bottom: 5px;">
+                    MTHE
+                    <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2"
+                        style="width: 200px; text-align: center; max-height: 300px; overflow-y: auto;">
+                        <i class="fa fa-caret-down"></i>
+    
+                        <a class="dropdown-item" href="">MTHE 212</a>
+                        <a class="dropdown-item" href="">MTHE 217</a>
+                        <a class="dropdown-item" href="">MTHE 224</a>
+                        <a class="dropdown-item" href="">MTHE 225</a>
+                        <a class="dropdown-item" href="">MTHE 227</a>
+                        <a class="dropdown-item" href="">MTHE 228</a>
+                        <a class="dropdown-item" href="">MTHE 235</a>
+                        <a class="dropdown-item" href="">MTHE 237</a>
+                        <a class="dropdown-item" href="">MTHE 272</a>
+                        <a class="dropdown-item" href="">MTHE 280</a>
+                        <a class="dropdown-item" href="">MTHE 281</a>
+    
+                    </div>
+                </div>
+           
+            
+            
         </ul>
     </nav>
 </div>

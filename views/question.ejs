@@ -10,6 +10,27 @@
 
 <body style="overflow-x: hidden;">
   <%- include("partials/navbar.ejs") %>
+
+  <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
+    <div class="toast-upvote" style="position: absolute; right: 40px; top: 60px;">
+      <div class="toast-header">
+        <strong>enQuire</strong>
+      </div>
+      <div class="toast-body">
+        Upvoted Post
+      </div>
+    </div>
+  </div>
+  <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
+    <div class="toast-downvote" style="position: absolute; right: 40px; top: 60px;">
+      <div class="toast-header">
+        <strong>enQuire</strong>
+      </div>
+      <div class="toast-body">
+        Downvoted Post
+      </div>
+    </div>
+  </div>
   <!--
         Add 3 columns 2 being rather small and the middle being the largest one
         Find out how to store images to the database
@@ -17,36 +38,41 @@
         Get the drop down menu in the navbar to work
     -->
 
-  <div class="row">
+  <div class="row" style="margin-bottom: 60px;">
     <%- include("partials/sidebar.ejs")%>
     <div class="content col-lg-7">
       <div class="card" style="margin-top: 20px;">
         <div class="card-header">
-          <h1>Subject</h1>
+          <h1><%=question.course%></h1>
         </div>
 
         <div class="card-body">
           <div class="card-title">
-            <h1>Question Title</h1>
+            <h1><%=question.title%></h1>
           </div>
-          <p>Question Body With Mathjax and Stuff</p>
+          <p><%=question.body%></p>
         </div>
         <div class="card-footer">
-          <p>Information about the Question and the user here</p>
+          <p><%=question.user%>    Tags: <%=question.tags%></p>
         </div>
       </div>
       <hr>
       <h2>Current Answers</h2>
       <!-- Example existing responses -->
+
       <div class="row">
         <div class="col-lg-2">
-
+          <!-- Make these buttons and Script buttons in ejs loops for each response -->
           <button class="btn" id="question_id_upvote"><img
               src="https://quicksew.ca/wp-content/uploads/2016/11/queens-jacket-07.jpg" alt="updoots"
               style="width: 50px;"></button>
           <script>
             $(document).ready(function () {
+              $(".toast-upvote").toast('show');
+              $(".toast-downvote").toast('show');
+              //Temporary fix, toasts won't dissappear since the jquery isn't loaded until the end of the page
               $("#question_id_upvote").click(function () {
+                $(".toast-upvote").toast('show');
                 $.ajax({
                   url: '/vote/jsdhf',
                   type: "POST",
@@ -70,6 +96,7 @@
           <script>
             $(document).ready(function () {
               $("#question_id_downvote").click(function () {
+                $(".toast-downvote").toast('show');
                 $.ajax({
                   url: '/vote/jsdhf',
                   type: "POST",
@@ -111,7 +138,7 @@
           style="position: absolute; left: 10px; margin-top: 10px;">Preview
           Solution</button>
 
-        <div></div>
+
       </div>
     </div>
 

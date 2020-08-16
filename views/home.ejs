@@ -41,7 +41,10 @@
 
 
                     <h5 class="card-title">
-                        <%= list[i].title%>
+                        <a href="/view-question/<%= list[i]._id%>">
+                            <%= list[i].title%>
+                        </a>
+                        
                     </h5>
                     <p class="card-text">
                         <%= list[i].body.substring(0,500) %>
