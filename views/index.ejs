@@ -6,55 +6,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-        <script type="text/x-mathjax-config">
+    <script type="text/x-mathjax-config">
             MathJax.Hub.Config({
               tex2jax: {
                 inlineMath: [["$","$"],["\\(","\\)"]]
               }
             });
           </script>
-          <script type="text/javascript"
-            src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
-          </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+    </script>
 
     <title>Form Inputs</title>
 </head>
 
 <body style="margin-bottom: 100px;">
     <div style=" margin-bottom: 50px;">
-         <%- include('partials/navbar.ejs')%>
+        <%- include('partials/navbar.ejs')%>
     </div>
-  
 
 
 
-    
+
+
     <div class="row" style="margin-left: 100px; margin-right: 100px;">
         <div class="form-group col-lg-8">
-            <form action="/question-compositions" method="POST">
+            <form action="/question-compositions" method="POST" enctype="multipart/form-data">
                 <h1>Question Composition</h1>
                 <h4 style="margin-top: 50px;">Title</h4>
-                <input class="form-control" name="title" type="text" style="margin-bottom: 15px; " placeholder="eg: Integration by Parts"
-                    autocomplete="off">
+                <input class="form-control" name="title" type="text" style="margin-bottom: 15px; "
+                    placeholder="eg: Integration by Parts" autocomplete="off">
 
                 <br>
                 <h4>Question Body</h4>
                 <textarea name="questionBody" class="form-control" id="exampleFormControlTextarea1" rows="4"
-                    style="height: 450px; resize: none;" placeholder="Insert Relevant Formulas and Work You Have Done so Far"></textarea>
+                    style="height: 450px; resize: none;"
+                    placeholder="Insert Relevant Formulas and Work You Have Done so Far"></textarea>
 
                 <br>
                 <h4>Tags</h4>
                 <input name="tags" class="form-control" type="text" style="margin-top: 15px; "
-                    placeholder="eg: Eigenvectors, Derivatives. Make sure to separate each tag with a comma" autocomplete="off">
+                    placeholder="eg: Eigenvectors, Derivatives. Make sure to separate each tag with a comma"
+                    autocomplete="off">
 
                 <br>
-                <h4>Course</h4>
-                <select class="form-control" name="course" style="width: 50%; margin-right: 20px;">
-                    <% for (i in courselist){ %>
-                    <option> <%= courselist[i] %></option>
-                    <% } %>
+                <div class="row">
+                    <div class="col">
+                        <h4>Course</h4>
+                        <select class="form-control" name="course" style="width: 100%; margin-right: 20px;">
+                            <% for (i in courselist){ %>
+                            <option> <%= courselist[i] %></option>
+                            <% } %>
 
-                </select>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <h4>Upload an Image</h4>
+                        <input type="file" name="userimage">
+                    </div>
+
+                </div>
+
+
+
+                <br>
 
                 <input type="checkbox" class="form-check-input" id="examplecheckbox" style="margin-top: 20px;">
                 <label for="examplecheckbox" style="margin-top: 20px;"> I agree to the Terms of Service</label>
@@ -69,7 +83,7 @@
             <br>
             <label for="preview">Question Preview</label>
             <p id="textareapreview"></p>
-           
+
             <h3 style="margin-top: 75px;">Tips for Composing Your Question</h3>
             <ul>
                 <li>Be Concise</li>

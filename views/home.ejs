@@ -16,70 +16,96 @@
     </script>
     <script type="text/javascript"
         src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body style="overflow-x: hidden;">
     <%- include('partials/navbar.ejs')%>
     <div class="row">
 
-        <div class="col-lg-3 sidebar menu sticky-top">
-            <nav class="wrapper bg-light border-right" style="margin-left: 20px; padding-right: 20px; height: 100%; position: fixed;">
+        <%- include('partials/sidebar.ejs')%>
 
-                <div class="sidebar-header">
-                    <h3>Enquire Menu</h3>
+
+
+
+        <div class="content col-lg-6 col-md-auto"
+            style="margin-top: 20px; margin-bottom: 20px; width: 50%; margin-left: 0; margin-right: auto;">
+            <button class="btn btn-success" id="toggle">Open Sidebar</button>
+            <!-- Need to have an array of objects in here and a for loop-->
+            <% for(i in list){ %>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <h1><%=list[i].course%></h1>
                 </div>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" href="" style="color:#0058AB;">First Year Questions</a>
-                    </li>
-                </ul>
+                <div class="card-body">
 
 
-            </nav>
-        </div>
-    
-
-
-
-    <div class="content col-lg-6" style="margin-left: 0%; margin-top: 20px; margin-bottom: 20px; width: 50%;">
-        <!-- Need to have an array of objects in here and a for loop-->
-        <% for(i in list){ %>
-        <div class="card" style="margin-top: 20px;">
-            <div class="card-header">
-                <h1><%=list[i].course%></h1>
-            </div>
-            <div class="card-body">
-                
-                
                     <h5 class="card-title">
-                        <%= list[i].title%>
+                        <a href="/view-question/<%= list[i]._id%>">
+                            <%= list[i].title%>
+                        </a>
+                        
                     </h5>
                     <p class="card-text">
-                    <%= list[i].body.substring(0,500) %>
-                    <% if(list[i].body.length>500){%>
+                        <%= list[i].body.substring(0,500) %>
+                        <% if(list[i].body.length>500){%>
                         ...
-                    <% } %>
-                </p>
-                   
-                   
-                    
-                
-            </div>
-            <div class="card-footer">
-                <ul class="list-inline">
-                    <li class="list-inline-item">User: <a href="">
-                        <%= list[i].author%>
-                    </a></li>
-                    <li class="list-inline-item">Date: <%=list[i].date%></li>
-                </ul>
-              
-            </div>
-        </div>
-        <% } %>
-    </div>
-    </div>
-</div>
+                        <% } %>
+                    </p>
 
+
+
+
+                </div>
+                <div class="card-footer">
+                    <ul class="list-inline">
+                        <li class="list-inline-item">User: <a href="/user/<%=list[i].author%>">
+                                <%= list[i].author%>
+                            </a></li>
+                        <li class="list-inline-item">Date: <%=list[i].date%></li>
+                    </ul>
+
+                </div>
+            </div>
+            <% } %>
+           <div style="margin-top: 15px;">
+               <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <% if(currentPage!=1){ %>
+                    <li class="page-item"><a class="page-link" href="/home/page/<%=currentPage-1%>">Previous</a></li>
+                   <% } %>
+                    
+                    <% for(i=1;i<=pages;i++){ %>
+                        <li class="page-item"><a class="page-link" href="/home/page/<%=i%>"><%=i%></a></li>
+                    <% } %>
+                    
+                    <% if(currentPage!=pages){%>
+                        <li class="page-item"><a class="page-link" href="/home/page/<%=currentPage+1%>">Next</a></li>
+                    <%}%>
+
+                    
+                </ul>
+            </nav>
+           </div>
+                
+            
+            
+        </div>
+       
+    
+    </div>
+    </div>
+    
 </body>
+<script src="/src/sidebar.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+    crossorigin="anonymous"></script>
 
 </html>
