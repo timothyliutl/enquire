@@ -102,12 +102,12 @@ const userSchema = new mongoose.Schema({
 //Do not make password required here, for some reason it doesn't work with passport
 
 // const responseSchema = mongoose.Schema({
-//     title: {
-//         type: String,
-//         required: true,
-//     },
+//     // title: {
+//     //     type: String,
+//     //     required: true,
+//     // },
 //     author: {
-//         type: Number,
+//         type: String,
 //         required: true,
 //         immutable: true
 //     },
@@ -125,7 +125,7 @@ const userSchema = new mongoose.Schema({
 //     //     required: true,
 //     // },
 //     question: {
-//         type: Number,
+//         type: ObjectId,
 //         required: true,
 //         immutable: true
 //     },
@@ -167,11 +167,14 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 app.set("view engine", "ejs");
 
-//console.log(process.env.MONGO_DB);
+console.log(process.env.MONGO_DB);
 mongoose.connect(process.env.MONGO_DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
+
+
+
 mongoose.set('useCreateIndex', true);
 //This date stuff isn't really used in the code currently, just something I used to test out templating
 var day = new Date();
@@ -188,17 +191,18 @@ var response = {};
 
 //TODO: add this array to the database and not have it hardcoded in here
 var courses = DBcourse.find({}, { _id: 1 }); //["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
+courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
 
 //This is where we want to compile data from the database into a list, right now the ejs file is 
 //expecting a list of javascript objects as shown below, this should model the objects already in the response database
-var dummyresponselist = [];
+var questionList = [];
 
 function getQuestions() {
-    DBquestion.find({}).sort({ date: -1 }).limit(20).lean().exec(function(err, doc) {
+    DBquestion.find({}).sort({ date: -1 }).lean().exec(function(err, doc) {
         if (err) {
             console.log(err);
         }
-        dummyresponselist = doc;
+        questionList = doc;
         //console.log(doc);
 
     });
@@ -222,7 +226,7 @@ app.get('/home', function(req, res) {
         //This function here might cause some issues
         //Can solve question home screen issue by redirecting to the question specific page first then have the user redirect to the home screen
         //remember the () after the is authenticated, will always return true unless you call the function
-        res.render('home', { list: dummyresponselist });
+        res.render('home', { list: questionList });
     } else {
         res.redirect('/login');
     }
@@ -231,7 +235,7 @@ app.get('/home', function(req, res) {
 
 app.get('/home/page/:pagenum', function(req, res) {
     if (req.isAuthenticated()) {
-        res.render('home', { list: dummyresponselist });
+        res.render('home', { list: questionList });
     }
 });
 
@@ -376,22 +380,22 @@ app.get("/user/:userID", function(req, res) {
 //Need to find a way to pass in the question ID to the ejs file and from the ejs file to a redirectable link
 app.get("/view-question/:questionID", function(req, res) {
     //Add modal if user has not been logged in
-    if(req.isAuthenticated){
-    DBquestion.findOne({_id: req.params.questionID}, function(err,doc){
-        if(err){
-            console.log(err);
-            res.render("404errorpage");
-        }else{
-            console.log(doc);
-            res.render("question", {question:doc});
-            //need to add a response in the render function too
-        }
-    });    
-    }else{
+    if (req.isAuthenticated) {
+        DBquestion.findOne({ _id: req.params.questionID }, function(err, doc) {
+            if (err) {
+                console.log(err);
+                res.render("404errorpage");
+            } else {
+                console.log(doc);
+                res.render("question", { question: doc });
+                //need to add a response in the render function too
+            }
+        });
+    } else {
         res.redirect('/login');
     }
-    
-    
+
+
 });
 
 app.post('/view-question/:questionID', function(req, res) {
@@ -404,17 +408,17 @@ app.post('/view-question/:questionID', function(req, res) {
 var updoots = 0;
 //Updoots and downdoots get and post requests
 //Change this in the future so it edits values in the database
-app.post("/vote/:questionID", function(req,res){
-  if(req.body.type=="updoot"){
-    updoots++;
-    res.send({value:updoots});
-  }else{
-    if(req.body.type=="downdoot"){
-      updoots--;
-      res.status(200).send({value: updoots});
+app.post("/vote/:questionID", function(req, res) {
+    if (req.body.type == "updoot") {
+        updoots++;
+        res.send({ value: updoots });
+    } else {
+        if (req.body.type == "downdoot") {
+            updoots--;
+            res.status(200).send({ value: updoots });
+        }
     }
-  }
-  console.log(req.body.type);
+    console.log(req.body.type);
 });
 
 
