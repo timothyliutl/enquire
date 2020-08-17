@@ -198,11 +198,12 @@ courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
 var questionList = [];
 
 function getQuestions() {
-    DBquestion.find({}).sort({ date: -1 }).lean().exec(function(err, doc) {
+    DBquestion.find({}).sort({ date: -1 }).limit(20).lean().skip(0).exec(function(err, doc) {
         if (err) {
             console.log(err);
         }
-        questionList = doc;
+
+        dummyresponselist = doc;
         //console.log(doc);
 
     });
@@ -222,11 +223,8 @@ app.get("/", function(req, res) {
 
 app.get('/home', function(req, res) {
     if (req.isAuthenticated()) {
-        getQuestions();
-        //This function here might cause some issues
-        //Can solve question home screen issue by redirecting to the question specific page first then have the user redirect to the home screen
-        //remember the () after the is authenticated, will always return true unless you call the function
-        res.render('home', { list: questionList });
+
+        res.redirect('/home/page/1')
     } else {
         res.redirect('/login');
     }
@@ -235,7 +233,21 @@ app.get('/home', function(req, res) {
 
 app.get('/home/page/:pagenum', function(req, res) {
     if (req.isAuthenticated()) {
-        res.render('home', { list: questionList });
+        DBquestion.find({}).sort({ date: -1 }).limit(20).lean().skip(req.params.pagenum - 1).exec(function(err, doc) {
+            if (err) {
+                console.log(err);
+                res.render("404errorpage");
+            }
+
+            DBquestion.count({}, function(err, result) {
+                res.render('home', { list: doc, currentPage: req.params.pagenum, pages: Math.ceil(result / 20) });
+            });
+
+
+        });
+
+    } else {
+        res.redirect('/login');
     }
 });
 
