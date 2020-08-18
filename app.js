@@ -9,6 +9,7 @@ const passport = require("passport");
 const multer = require('multer');
 const passportLocalMongoose = require("passport-local-mongoose");
 const path = require('path');
+const e = require('express');
 var ObjectId = require('mongodb').ObjectID;
 
 var storage = multer.diskStorage({
@@ -40,8 +41,6 @@ function checkFileType(file, cb) {
 
 }
 
-//replace this later with the actual list from the database
-
 //Tells program which mongodb database to be looking for
 
 //Tells how the response document should be structured
@@ -65,11 +64,10 @@ const questionSchema = new mongoose.Schema({
     },
     body: String,
     tags: String, //evenutally needs to be made into a list as opposed to a string
-    //subject: String,
     course: {
         type: String,
-        required: true
-            //, immutable: true
+        required: true,
+        immutable: true
     },
 
 });
@@ -84,6 +82,18 @@ const courseSchema = new mongoose.Schema({
     },
     courseName: {
         type: String,
+        required: true
+    },
+    discipline: {
+        type: String,
+        minlength: 4,
+        maxlength: 4,
+        required: true
+    },
+    year: {
+        type: Number,
+        min: 1,
+        max: 4,
         required: true
     }
 });
@@ -101,52 +111,57 @@ const userSchema = new mongoose.Schema({
 });
 //Do not make password required here, for some reason it doesn't work with passport
 
-// const responseSchema = mongoose.Schema({
-//     // title: {
-//     //     type: String,
-//     //     required: true,
-//     // },
-//     author: {
-//         type: String,
-//         required: true,
-//         immutable: true
-//     },
-//     date: {
-//         type: Date,
-//         required: true,
-//         default: Date.now,
-//         immutable: true
-//     },
-//     body: String,
-//     //tags: [String],
-//     //subject: String,
-//     // course: {
-//     //     type: String,
-//     //     required: true,
-//     // },
-//     question: {
-//         type: ObjectId,
-//         required: true,
-//         immutable: true
-//     },
-//     upvotes: {
-//         typs: Number,
-//         required: true,
-//         default: 0
-//     },
-//     downvotes: {
-//         typs: Number,
-//         required: true,
-//         default: 0
-//     }
-// });
+const responseSchema = new mongoose.Schema({
+    // title: {
+    //     type: String,
+    //     required: true,
+    // },
+    author: {
+        type: String,
+        required: true,
+        immutable: true
+    },
+    date: {
+        type: Date,
+        required: true,
+        default: Date.now,
+        immutable: true
+    },
+    body: String,
+    //tags: [String],
+    //subject: String,
+    // course: {
+    //     type: String,
+    //     required: true,
+    // },
+    question: {
+        type: ObjectId,
+        required: true,
+        immutable: true
+    },
+    upvotes: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    upvoteUsers: {
+        type: [String],
+        required: true,
+        default: []
+    },
+    downvoteUsers: {
+        type: [String],
+        required: true,
+        default: []
+    }
+});
 
 userSchema.plugin(passportLocalMongoose);
 
 const User = new mongoose.model("User", userSchema);
 const DBcourse = new mongoose.model("Course", courseSchema);
 const DBquestion = new mongoose.model("Question", questionSchema);
-//const DBresponse = new mongoose.model("Response", responseSchema)
+const DBresponse = new mongoose.model("Response", responseSchema)
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -173,8 +188,6 @@ mongoose.connect(process.env.MONGO_DB, {
     useUnifiedTopology: true,
 });
 
-
-
 mongoose.set('useCreateIndex', true);
 //This date stuff isn't really used in the code currently, just something I used to test out templating
 var day = new Date();
@@ -190,7 +203,7 @@ var days = [
 var response = {};
 
 //TODO: add this array to the database and not have it hardcoded in here
-var courses = DBcourse.find({}, { _id: 1 }); //["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
+var courses = DBcourse.find({}, { _id: 1 }).lean();
 courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
 
 //This is where we want to compile data from the database into a list, right now the ejs file is 
@@ -418,22 +431,54 @@ app.post('/view-question/:questionID', function(req, res) {
 });
 
 var updoots = 0;
+// var username = "maxbennett1"; //PLACEHOLDER, need to change this
+// var responseID = "65rdfcvbhji87trfvbhj"; //PLACEHOLDER, need to change this
+
 //Updoots and downdoots get and post requests
 //Change this in the future so it edits values in the database
 app.post("/vote/:questionID", function(req, res) {
+    // voteLists = DBresponse.findOne({ _id: responseID }, { upvoteUsers: 1, downvoteUsers: 1 });
+    // upvoteList = voteLists.upvoteUsers;
+    // downvoteList = voteLists.downvoteUsers;
     if (req.body.type == "updoot") {
-        updoots++;
+        // if (downvoteList.includes(username)) {
+        //     DBresponse.updateOne({ _id: responseID }, {
+        //         $inc: { upvotes: 2 },
+        //         $pull: { downvoteUsers: username },
+        //         $addToSet: { upvoteUsers: username }
+        //     });
+        //     updoots += 2;
+        // } else if (!upvoteList.includes(username)) {
+        //     DBresponse.updateOne({ _id: responseID }, {
+        //         $inc: { upvotes: 1 },
+        //         $addToSet: { upvoteUsers: username }
+        //     });
+        //     updoots++;
+        // }
+        updoots++; //will be removed eventually
         res.send({ value: updoots });
     } else {
         if (req.body.type == "downdoot") {
-            updoots--;
+            // if (upvoteList.includes(username)) {
+            //     DBresponse.updateOne({ _id: responseID }, {
+            //         $inc: { upvotes: -2 },
+            //         $addToSet: { downvoteUsers: username },
+            //         $pull: { upvoteUsers: username }
+            //     });
+            //     updoots -= 2;
+            // } else if (!downvoteList.includes(username)) {
+            //     DBresponse.updateOne({ _id: responseID }, {
+            //         $inc: { upvotes: -1 },
+            //         $addToSet: { downvoteUsers: username }
+            //     });
+            //     updoots--;
+            // }
+            updoots--; //will be removed eventually
             res.status(200).send({ value: updoots });
         }
     }
     console.log(req.body.type);
 });
-
-
 
 app.get("*", function(req, res) {
     res.render("404errorpage");
