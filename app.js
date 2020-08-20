@@ -135,7 +135,7 @@ const responseSchema = new mongoose.Schema({
     //     required: true,
     // },
     question: {
-        type: ObjectId,
+        type: String,
         required: true,
         immutable: true
     },
@@ -220,10 +220,10 @@ function getQuestions() {
         //console.log(doc);
 
     });
-    //Looks like the code runs and after it runs through once, it runs the find function (probably an async function)
+    //Don't really need this function anymore
 }
 
-getQuestions();
+
 
 
 //Everything below this comment are functions that run when a website is loaded
@@ -252,7 +252,7 @@ app.get('/home/page/:pagenum', function(req, res) {
                 res.render("404errorpage");
             }
 
-            DBquestion.count({}, function(err, result) {
+            DBquestion.countDocuments({}, function(err, result) {
                 res.render('home', { list: doc, currentPage: req.params.pagenum, pages: Math.ceil(result / 20) });
             });
 
@@ -404,15 +404,23 @@ app.get("/user/:userID", function(req, res) {
 
 //Need to find a way to pass in the question ID to the ejs file and from the ejs file to a redirectable link
 app.get("/view-question/:questionID", function(req, res) {
-    //Add modal if user has not been logged in
+    
     if (req.isAuthenticated) {
-        DBquestion.findOne({ _id: req.params.questionID }, function(err, doc) {
+        DBquestion.findOne({ _id: req.params.questionID }, function(err, question) {
             if (err) {
                 console.log(err);
                 res.render("404errorpage");
             } else {
-                console.log(doc);
-                res.render("question", { question: doc });
+                
+                DBresponse.find({question: req.params.questionID}, function(err,responseArray){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        
+                        res.render("question", { question: question, questionID: req.params.questionID, responseArray: responseArray });
+                    }
+                })
+                
                 //need to add a response in the render function too
             }
         });
@@ -425,8 +433,19 @@ app.get("/view-question/:questionID", function(req, res) {
 
 app.post('/view-question/:questionID', function(req, res) {
     var replytext = req.body.response;
-    console.log(replytext);
-    res.redirect("/home");
+    
+    if(req.isAuthenticated){
+       newResponse = new DBresponse({question: req.params.questionID,
+        body: replytext,
+        author: req.user.username,
+        date: Date()
+
+    }); 
+    newResponse.save();
+    res.redirect('/view-question/'+req.params.questionID);
+    }else{
+        res.redirect('/login');
+    }
     //Works, now just need to get the database to work with it
 });
 
@@ -473,6 +492,8 @@ app.post("/vote/:questionID", function(req, res) {
             //     });
             //     updoots--;
             // }
+            //Idea is to take the number of users in each array to calculate the upvotes/downvote total
+            //Hopefully makes it less prone to bugs and people spamming the button
             updoots--; //will be removed eventually
             res.status(200).send({ value: updoots });
         }

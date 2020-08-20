@@ -12,7 +12,7 @@
   <%- include("partials/navbar.ejs") %>
 
   <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
-    <div class="toast-upvote" style="position: absolute; right: 40px; top: 60px;">
+    <div class="toast-upvote toast" style="position: fixed; right: 40px; top: 60px; width: 200px;">
       <div class="toast-header">
         <strong>enQuire</strong>
       </div>
@@ -22,7 +22,7 @@
     </div>
   </div>
   <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
-    <div class="toast-downvote" style="position: absolute; right: 40px; top: 60px;">
+    <div class="toast-downvote toast" style="position: fixed; right: 40px; top: 60px; width: 200px;">
       <div class="toast-header">
         <strong>enQuire</strong>
       </div>
@@ -53,33 +53,38 @@
           <p><%=question.body%></p>
         </div>
         <div class="card-footer">
-          <p><%=question.user%>    Tags: <%=question.tags%></p>
+          <p><%=question.user%> Tags: <%=question.tags%></p>
         </div>
       </div>
       <hr>
       <h2>Current Answers</h2>
       <!-- Example existing responses -->
 
-      <div class="row">
+
+      <% for(i in responseArray){%>
+      <div class="row" style="margin-top: 50px; margin-bottom: 50px;">
         <div class="col-lg-2">
           <!-- Make these buttons and Script buttons in ejs loops for each response -->
-          <button class="btn" id="question_id_upvote"><img
+
+          <button class="btn" id="question_upvote_<%=responseArray[i]._id%>"><img
               src="https://quicksew.ca/wp-content/uploads/2016/11/queens-jacket-07.jpg" alt="updoots"
               style="width: 50px;"></button>
           <script>
             $(document).ready(function () {
-              $(".toast-upvote").toast('show');
-              $(".toast-downvote").toast('show');
+              // $(".toast-upvote").toast('show');
+              // $(".toast-downvote").toast('show');
               //Temporary fix, toasts won't dissappear since the jquery isn't loaded until the end of the page
-              $("#question_id_upvote").click(function () {
+              $("#question_upvote_<%=responseArray[i]._id%>").click(function () {
+                $(".toast-upvote").toast({ delay: 5000 });
                 $(".toast-upvote").toast('show');
+
                 $.ajax({
-                  url: '/vote/jsdhf',
+                  url: '/vote/<%=responseArray[i]._id%>',
                   type: "POST",
                   data: { type: "updoot" },
                   success: function (data) {
                     console.log(data);
-                    $("#tam_counter").html(data.value + " Tams");
+                    $("#tam_counter_<%=responseArray[i]._id%>").html(data.value + " Tams");
                   }
                 });
               });
@@ -87,23 +92,25 @@
           </script>
 
 
-          <h6 style="text-align: center;" id="tam_counter">0 Tams</h6>
+          <h6 style="text-align: center;" id="tam_counter_<%=responseArray[i]._id%>">0 Tams</h6>
 
 
-          <button class="btn" id="question_id_downvote"><img
+          <button class="btn" id="question_downvote_<%=responseArray[i]._id%>"><img
               src="https://media-exp1.licdn.com/dms/image/C4E0BAQEsG87VcXgbow/company-logo_200_200/0?e=2159024400&v=beta&t=lBzainxYpW-4LPSKtWrH-IwqRgWKd5DEifiEtbAN2cw"
               alt="downdoots" style="width: 50px;"></button>
           <script>
             $(document).ready(function () {
-              $("#question_id_downvote").click(function () {
+              $("#question_downvote_<%=responseArray[i]._id%>").click(function () {
+                console.log('downdoot');
+                $(".toast-downvote").toast({ delay: 5000 });
                 $(".toast-downvote").toast('show');
                 $.ajax({
-                  url: '/vote/jsdhf',
+                  url: '/vote/<%=responseArray[i]._id%>',
                   type: "POST",
                   data: { type: "downdoot" },
                   success: function (data) {
                     console.log(data);
-                    $("#tam_counter").html(data.value + " Tams");
+                    $("#tam_counter_<%=responseArray[i]._id%>").html(data.value + " Tams");
                   }
                 });
               });
@@ -115,20 +122,22 @@
         <div class="col-lg-10">
           <div class="card w-100">
             <div class="card-body">
-              <p>Insert Reply Here</p>
+              <p><%=responseArray[i].body%></p>
               <br />
-              <p style="text-align: right;"><a href="">Username Here</a></p>
+              <p style="text-align: right;"><a href=""><%=responseArray[i].author%></a></p>
               <p style="text-align: right;">Verified Tutor</p>
             </div>
           </div>
         </div>
 
       </div>
+      <% } %>
+
 
 
       <div class="form-group" style="margin-top: 50px;">
         <label for="responsetextarea">Your Solution</label>
-        <form action="/view-question" method="POST" name="reply">
+        <form action="/view-question/<%=questionID%>" method="POST" name="reply">
           <textarea class="form-control" name="response" id="responsetextarea" cols="30" rows="5" style="resize: none;"
             placeholder="Post Your Reply Here"></textarea>
           <button class="btn btn-success" style="position: absolute; right: 10px; margin-top: 10px;">Post
