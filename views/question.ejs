@@ -81,7 +81,10 @@
                 $.ajax({
                   url: '/vote/<%=responseArray[i]._id%>',
                   type: "POST",
-                  data: { type: "updoot" },
+                  data: {
+                    type: "updoot",
+                    id: '<%=responseArray[i]._id%>'
+                  },
                   success: function (data) {
                     console.log(data);
                     $("#tam_counter_<%=responseArray[i]._id%>").html(data.value + " Tams");
@@ -101,13 +104,17 @@
           <script>
             $(document).ready(function () {
               $("#question_downvote_<%=responseArray[i]._id%>").click(function () {
-                console.log('downdoot');
+                $(".toast").toast('hide');
                 $(".toast-downvote").toast({ delay: 5000 });
                 $(".toast-downvote").toast('show');
+
                 $.ajax({
                   url: '/vote/<%=responseArray[i]._id%>',
                   type: "POST",
-                  data: { type: "downdoot" },
+                  data: {
+                    type: "downdoot",
+                    id: '<%=responseArray[i]._id%>'
+                  },
                   success: function (data) {
                     console.log(data);
                     $("#tam_counter_<%=responseArray[i]._id%>").html(data.value + " Tams");
@@ -115,6 +122,8 @@
                 });
               });
             });
+            
+            
           </script>
 
 

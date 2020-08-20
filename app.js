@@ -182,7 +182,7 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 app.set("view engine", "ejs");
 
-console.log(process.env.MONGO_DB);
+
 mongoose.connect(process.env.MONGO_DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -456,6 +456,7 @@ var updoots = 0;
 //Updoots and downdoots get and post requests
 //Change this in the future so it edits values in the database
 app.post("/vote/:questionID", function(req, res) {
+    console.log(req.body.id);
     // voteLists = DBresponse.findOne({ _id: responseID }, { upvoteUsers: 1, downvoteUsers: 1 });
     // upvoteList = voteLists.upvoteUsers;
     // downvoteList = voteLists.downvoteUsers;
