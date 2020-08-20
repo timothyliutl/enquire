@@ -438,43 +438,43 @@ var updoots = 0;
 //Change this in the future so it edits values in the database
 app.post("/vote/:questionID", function(req, res) {
     var username = req.user.username;
-    var responsId = req.params.questionID;
+    var responseID = req.params.questionID;
     voteLists = DBresponse.findOne({ _id: responseID }, { upvoteUsers: 1, downvoteUsers: 1 });
     upvoteList = voteLists.upvoteUsers;
     downvoteList = voteLists.downvoteUsers;
-    currentUpvotes = upvoteList.count - downvoteList.count
+    upvotes = upvoteList.length - downvoteList.length
     if (req.body.type == "updoot") {
         if (downvoteList.includes(username)) {
             DBresponse.updateOne({ _id: responseID }, {
                 $pull: { downvoteUsers: username },
                 $addToSet: { upvoteUsers: username }
+
             });
-            //     updoots += 2;
+            upvotes += 2;
         } else if (!upvoteList.includes(username)) {
             DBresponse.updateOne({ _id: responseID }, {
                 $addToSet: { upvoteUsers: username }
             });
-            updoots++;
+            upvotes++;
         }
-        updoots++; //will be removed eventually
+        //updoots++; //will be removed eventually
         res.send({ value: updoots });
     } else {
         if (req.body.type == "downdoot") {
-            // if (upvoteList.includes(username)) {
-            //     DBresponse.updateOne({ _id: responseID }, {
-            //         $addToSet: { downvoteUsers: username },
-            //         $pull: { upvoteUsers: username }
-            //     });
-            //     updoots -= 2;
-            // } else if (!downvoteList.includes(username)) {
-            //     DBresponse.updateOne({ _id: responseID }, {
-            //         $addToSet: { downvoteUsers: username }
-            //     });
-            //     updoots--;
-            // }
-            updoots--; //will be removed eventually
-            =
-            res.status(200).send({ value: updoots });
+            if (upvoteList.includes(username)) {
+                DBresponse.updateOne({ _id: responseID }, {
+                    $addToSet: { downvoteUsers: username },
+                    $pull: { upvoteUsers: username }
+                });
+                upvotes -= 2;
+            } else if (!downvoteList.includes(username)) {
+                DBresponse.updateOne({ _id: responseID }, {
+                    $addToSet: { downvoteUsers: username }
+                });
+                upvotes--;
+            }
+            //updoots--; //will be removed eventually
+            res.status(200).send({ value: upvotes });
         }
     }
     console.log(req.body.type);
