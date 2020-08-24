@@ -205,6 +205,10 @@ var response = {};
 //TODO: add this array to the database and not have it hardcoded in here
 //var courses = DBcourse.find({}, { _id: 1 }).lean();
 //courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
+DBcourse.find({}, { _id: 1 }).lean().exec(function(err, doc) {
+
+});
+courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
 
 //This is where we want to compile data from the database into a list, right now the ejs file is 
 //expecting a list of javascript objects as shown below, this should model the objects already in the response database
@@ -422,7 +426,7 @@ app.get("/user/:userID", function (req, res) {
 });
 
 //Need to find a way to pass in the question ID to the ejs file and from the ejs file to a redirectable link
-app.get("/view-question/:questionID", function (req, res) {
+app.get("/view-question/:questionID", function(req, res) {
 
     if (req.isAuthenticated) {
         DBquestion.findOne({ _id: req.params.questionID }, function (err, question) {
@@ -431,7 +435,7 @@ app.get("/view-question/:questionID", function (req, res) {
                 res.render("404errorpage");
             } else {
 
-                DBresponse.find({ question: req.params.questionID }, function (err, responseArray) {
+                DBresponse.find({ question: req.params.questionID }, function(err, responseArray) {
                     if (err) {
                         console.log(err);
                     } else {
@@ -469,56 +473,64 @@ app.post('/view-question/:questionID', function (req, res) {
     //Works, now just need to get the database to work with it
 });
 
-var updoots = 0;
+//var updoots = 0;
 // var username = "maxbennett1"; //PLACEHOLDER, need to change this
 // var responseID = "65rdfcvbhji87trfvbhj"; //PLACEHOLDER, need to change this
 
 //Updoots and downdoots get and post requests
 //Change this in the future so it edits values in the database
-app.post("/vote/:questionID", function (req, res) {
-    console.log(req.body.id);
-    // voteLists = DBresponse.findOne({ _id: responseID }, { upvoteUsers: 1, downvoteUsers: 1 });
+app.post("/vote/:questionID", function(req, res) {
+    var username = req.user.username;
+    var responseID = req.params.questionID;
+    DBresponse.findOne({ _id: responseID }, { upvoteUsers: 1, downvoteUsers: 1 }).exec(function(err, doc) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log(doc);
+            upvoteList = doc.upvoteUsers;
+            downvoteList = doc.downvoteUsers;
+            upvotes = upvoteList.length - downvoteList.length;
+            console.log(upvotes);
+            if (req.body.type == "updoot") {
+                if (downvoteList.includes(username)) {
+                    DBresponse.updateOne({ _id: responseID }, {
+                        $inc: { upvotes: 2 },
+                        $pull: { downvoteUsers: username },
+                        $addToSet: { upvoteUsers: username }
+                    });
+                    upvotes += 2;
+                } else if (!upvoteList.includes(username)) {
+                    DBresponse.updateOne({ _id: responseID }, {
+                        $inc: { upvotes: 1 },
+                        $addToSet: { upvoteUsers: username }
+                    });
+                    upvotes++;
+                }
+                //res.send({ value: updoots });
+            } else {
+                if (req.body.type == "downdoot") {
+                    if (upvoteList.includes(username)) {
+                        DBresponse.updateOne({ _id: responseID }, {
+                            $addToSet: { downvoteUsers: username },
+                            $pull: { upvoteUsers: username },
+                            $inc: { upvotes: -2 }
+                        });
+                        upvotes -= 2;
+                    } else if (!downvoteList.includes(username)) {
+                        DBresponse.updateOne({ _id: responseID }, {
+                            $inc: { upvotes: -1 },
+                            $addToSet: { downvoteUsers: username }
+                        });
+                        upvotes--;
+                    }
+                }
+            }
+        }
+        console.log(upvotes);
+        res.status(200).send({ value: upvotes });
+    });;
     // upvoteList = voteLists.upvoteUsers;
     // downvoteList = voteLists.downvoteUsers;
-    if (req.body.type == "updoot") {
-        // if (downvoteList.includes(username)) {
-        //     DBresponse.updateOne({ _id: responseID }, {
-        //         $inc: { upvotes: 2 },
-        //         $pull: { downvoteUsers: username },
-        //         $addToSet: { upvoteUsers: username }
-        //     });
-        //     updoots += 2;
-        // } else if (!upvoteList.includes(username)) {
-        //     DBresponse.updateOne({ _id: responseID }, {
-        //         $inc: { upvotes: 1 },
-        //         $addToSet: { upvoteUsers: username }
-        //     });
-        //     updoots++;
-        // }
-        updoots++; //will be removed eventually
-        res.send({ value: updoots });
-    } else {
-        if (req.body.type == "downdoot") {
-            // if (upvoteList.includes(username)) {
-            //     DBresponse.updateOne({ _id: responseID }, {
-            //         $inc: { upvotes: -2 },
-            //         $addToSet: { downvoteUsers: username },
-            //         $pull: { upvoteUsers: username }
-            //     });
-            //     updoots -= 2;
-            // } else if (!downvoteList.includes(username)) {
-            //     DBresponse.updateOne({ _id: responseID }, {
-            //         $inc: { upvotes: -1 },
-            //         $addToSet: { downvoteUsers: username }
-            //     });
-            //     updoots--;
-            // }
-            //Idea is to take the number of users in each array to calculate the upvotes/downvote total
-            //Hopefully makes it less prone to bugs and people spamming the button
-            updoots--; //will be removed eventually
-            res.status(200).send({ value: updoots });
-        }
-    }
     console.log(req.body.type);
 });
 
