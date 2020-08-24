@@ -15,6 +15,10 @@
           </script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
     </script>
+     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+     <link rel="stylesheet" href="/resources/demos/style.css">
+     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <title>Form Inputs</title>
 </head>
@@ -52,12 +56,17 @@
                 <div class="row">
                     <div class="col">
                         <h4>Course</h4>
-                        <select class="form-control" name="course" style="width: 100%; margin-right: 20px;">
-                            <% for (i in courselist){ %>
-                            <option> <%= courselist[i] %></option>
-                            <% } %>
+                        <input type="text" list="autocompletelist" id="courseselector">
+                        
+                        
+                        <script>
+                            var list = <%-JSON.stringify(courselist)%>;
+                            $('#courseselector').autocomplete({
+                                source: list
+                            });
+                        </script>
 
-                        </select>
+
                     </div>
                     <div class="col">
                         <h4>Upload an Image</h4>

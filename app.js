@@ -14,7 +14,7 @@ var ObjectId = require('mongodb').ObjectID;
 
 var storage = multer.diskStorage({
     destination: './public/uploads',
-    filename: function(req, file, cb) {
+    filename: function (req, file, cb) {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
 });
@@ -203,15 +203,15 @@ var days = [
 var response = {};
 
 //TODO: add this array to the database and not have it hardcoded in here
-var courses = DBcourse.find({}, { _id: 1 }).lean();
-courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
+//var courses = DBcourse.find({}, { _id: 1 }).lean();
+//courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
 
 //This is where we want to compile data from the database into a list, right now the ejs file is 
 //expecting a list of javascript objects as shown below, this should model the objects already in the response database
 var questionList = [];
 
 function getQuestions() {
-    DBquestion.find({}).sort({ date: -1 }).limit(20).lean().skip(0).exec(function(err, doc) {
+    DBquestion.find({}).sort({ date: -1 }).limit(20).lean().skip(0).exec(function (err, doc) {
         if (err) {
             console.log(err);
         }
@@ -228,13 +228,13 @@ function getQuestions() {
 
 //Everything below this comment are functions that run when a website is loaded
 
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
 
     res.sendFile(__dirname + "/HTML/home-notloggedin.html");
 
 });
 
-app.get('/home', function(req, res) {
+app.get('/home', function (req, res) {
     if (req.isAuthenticated()) {
 
         res.redirect('/home/page/1')
@@ -244,15 +244,15 @@ app.get('/home', function(req, res) {
 
 });
 
-app.get('/home/page/:pagenum', function(req, res) {
+app.get('/home/page/:pagenum', function (req, res) {
     if (req.isAuthenticated()) {
-        DBquestion.find({}).sort({ date: -1 }).limit(20).lean().skip(req.params.pagenum - 1).exec(function(err, doc) {
+        DBquestion.find({}).sort({ date: -1 }).limit(20).lean().skip(req.params.pagenum - 1).exec(function (err, doc) {
             if (err) {
                 console.log(err);
                 res.render("404errorpage");
             }
 
-            DBquestion.countDocuments({}, function(err, result) {
+            DBquestion.countDocuments({}, function (err, result) {
                 res.render('home', { list: doc, currentPage: req.params.pagenum, pages: Math.ceil(result / 20) });
             });
 
@@ -264,27 +264,40 @@ app.get('/home/page/:pagenum', function(req, res) {
     }
 });
 
-app.get('/home/query/:course', function(req, res) {
+app.get('/home/query/:course', function (req, res) {
     if (res.isAuthenticated()) {
         res.send(req.params.course);
     }
 });
 
 
-app.get("/question", function(req, res) {
+app.get("/question", function (req, res) {
 
     if (req.isAuthenticated()) {
-        getQuestions();
-        res.render("index", { date: days[day.getDay()], courselist: courses });
+        DBcourse.find({}, { _id: 1 }).lean().exec(function(err,doc){
+            if(err){
+                res.render('404errorpage');
+                console.log(err);
+            }else{
+                var coursenames = [];
+                for(i in doc){
+                    coursenames.push(doc[i]._id);
+                }
+                
+                res.render("index", { date: days[day.getDay()], courselist: coursenames});
+            }
+    
+        });
+        
     } else {
         res.redirect("/login");
     }
 });
 
 //After submit button is hit, the code inside here runs and saves all the date into the database, also console logs the information too
-app.post("/question-compositions", function(req, res) {
+app.post("/question-compositions", function (req, res) {
     console.log(req);
-    upload(req, res, function(err) {
+    upload(req, res, function (err) {
         if (err) {
             console.log(err);
             res.redirect('/question-compositions');
@@ -318,12 +331,12 @@ app.post("/question-compositions", function(req, res) {
 });
 
 
-app.get("/login", function(req, res) {
+app.get("/login", function (req, res) {
     if (req.isAuthenticated()) {
         res.redirect('/home');
         //Makes it so someone can't go back to the login screen if they are already logged in
     } else {
-        res.sendFile(__dirname + "/HTML/login.html", function(err) {
+        res.sendFile(__dirname + "/HTML/login.html", function (err) {
             if (err) {
                 console.log(err);
             }
@@ -334,36 +347,42 @@ app.get("/login", function(req, res) {
 
 //TODO: redirect to profile page template with approriate information
 //Curently just redirects to the question composition page
-app.post("/login", function(req, res) {
+app.post("/login", function (req, res) {
     const user = new User({
         username: req.body.username,
         password: req.body.password
     });
 
-    req.login(user, function(err) {
+    req.login(user, function (err) {
 
         if (err) {
             console.log(err);
         } else {
             //why can user be interchangble replaced with passport?
-            User.authenticate("local")(req, res, function() {
+            User.authenticate("local")(req, res, function () {
                 res.redirect('/question');
             });
         }
     });
 });
 
-app.get("/register", function(req, res) {
+
+app.get("/profile", function (req, res) {
+    res.render('profile');
+});
+
+
+app.get("/register", function (req, res) {
     if (req.isAuthenticated()) {
         res.redirect('/home')
     } else {
         res.render('register', { error: '' });
     }
-
-
 });
 
-app.post("/register", function(req, res) {
+
+
+app.post("/register", function (req, res) {
 
     User.register(
         //This used to be a javascript object, but to follow documentation
@@ -371,12 +390,12 @@ app.post("/register", function(req, res) {
         //Update: for some reason the object has to stay here, probably because the username was stored in a javascript object too
         { username: req.body.username, email: req.body.email },
         req.body.password,
-        function(err, user) {
+        function (err, user) {
             if (err) {
                 console.log(err);
                 res.render('register', { error: err });
             } else {
-                passport.authenticate("local")(req, res, function() {
+                passport.authenticate("local")(req, res, function () {
                     res.redirect("/home");
                 });
             }
@@ -385,14 +404,14 @@ app.post("/register", function(req, res) {
 
 });
 
-app.get('/logout', function(req, res) {
+app.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/login');
 });
 
-app.get("/user/:userID", function(req, res) {
+app.get("/user/:userID", function (req, res) {
     //req.params.ID will be the username and will be used to get user specific information from the database into the profile page
-    User.findOne({ username: req.params.userID }, function(err, doc) {
+    User.findOne({ username: req.params.userID }, function (err, doc) {
         if (err) {
             console.log(err);
         }
@@ -403,24 +422,24 @@ app.get("/user/:userID", function(req, res) {
 });
 
 //Need to find a way to pass in the question ID to the ejs file and from the ejs file to a redirectable link
-app.get("/view-question/:questionID", function(req, res) {
-    
+app.get("/view-question/:questionID", function (req, res) {
+
     if (req.isAuthenticated) {
-        DBquestion.findOne({ _id: req.params.questionID }, function(err, question) {
+        DBquestion.findOne({ _id: req.params.questionID }, function (err, question) {
             if (err) {
                 console.log(err);
                 res.render("404errorpage");
             } else {
-                
-                DBresponse.find({question: req.params.questionID}, function(err,responseArray){
-                    if(err){
+
+                DBresponse.find({ question: req.params.questionID }, function (err, responseArray) {
+                    if (err) {
                         console.log(err);
-                    }else{
-                        
+                    } else {
+
                         res.render("question", { question: question, questionID: req.params.questionID, responseArray: responseArray });
                     }
                 })
-                
+
                 //need to add a response in the render function too
             }
         });
@@ -431,19 +450,20 @@ app.get("/view-question/:questionID", function(req, res) {
 
 });
 
-app.post('/view-question/:questionID', function(req, res) {
+app.post('/view-question/:questionID', function (req, res) {
     var replytext = req.body.response;
-    
-    if(req.isAuthenticated){
-       newResponse = new DBresponse({question: req.params.questionID,
-        body: replytext,
-        author: req.user.username,
-        date: Date()
 
-    }); 
-    newResponse.save();
-    res.redirect('/view-question/'+req.params.questionID);
-    }else{
+    if (req.isAuthenticated) {
+        newResponse = new DBresponse({
+            question: req.params.questionID,
+            body: replytext,
+            author: req.user.username,
+            date: Date()
+
+        });
+        newResponse.save();
+        res.redirect('/view-question/' + req.params.questionID);
+    } else {
         res.redirect('/login');
     }
     //Works, now just need to get the database to work with it
@@ -455,7 +475,7 @@ var updoots = 0;
 
 //Updoots and downdoots get and post requests
 //Change this in the future so it edits values in the database
-app.post("/vote/:questionID", function(req, res) {
+app.post("/vote/:questionID", function (req, res) {
     console.log(req.body.id);
     // voteLists = DBresponse.findOne({ _id: responseID }, { upvoteUsers: 1, downvoteUsers: 1 });
     // upvoteList = voteLists.upvoteUsers;
@@ -502,12 +522,12 @@ app.post("/vote/:questionID", function(req, res) {
     console.log(req.body.type);
 });
 
-app.get("*", function(req, res) {
+app.get("*", function (req, res) {
     res.render("404errorpage");
 });
 
 //Tells what port the website should be running on
-app.listen(3000, function() {
+app.listen(3000, function () {
     console.log("Server running on Port 3000");
 });
 //const in JS for things inside a variable aren't always constant, the variable itself just can't be reassigned
