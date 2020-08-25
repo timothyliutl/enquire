@@ -75,6 +75,9 @@
               // $(".toast-downvote").toast('show');
               //Temporary fix, toasts won't dissappear since the jquery isn't loaded until the end of the page
               $("#question_upvote_<%=responseArray[i]._id%>").click(function () {
+                $('#question_upvote_<%=responseArray[i]._id%>').addClass('btn-primary');
+                $('#question_downvote_<%=responseArray[i]._id%>').removeClass('btn-danger');
+              
                 $(".toast-upvote").toast({ delay: 5000 });
                 $(".toast-upvote").toast('show');
 
@@ -104,6 +107,8 @@
           <script>
             $(document).ready(function () {
               $("#question_downvote_<%=responseArray[i]._id%>").click(function () {
+                $('#question_upvote_<%=responseArray[i]._id%>').removeClass('btn-primary');
+                $('#question_downvote_<%=responseArray[i]._id%>').addClass('btn-danger');
                 $(".toast").toast('hide');
                 $(".toast-downvote").toast({ delay: 5000 });
                 $(".toast-downvote").toast('show');

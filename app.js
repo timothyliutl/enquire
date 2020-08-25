@@ -490,36 +490,60 @@ app.post("/vote/:questionID", function(req, res) {
             upvoteList = doc.upvoteUsers;
             downvoteList = doc.downvoteUsers;
             upvotes = upvoteList.length - downvoteList.length;
-            console.log(upvotes);
-            if (req.body.type == "updoot") {
+            
+            if (req.body.type === "updoot") {
+                console.log(!upvoteList.includes(username));
                 if (downvoteList.includes(username)) {
+                    
                     DBresponse.updateOne({ _id: responseID }, {
                         $inc: { upvotes: 2 },
                         $pull: { downvoteUsers: username },
-                        $addToSet: { upvoteUsers: username }
+                        $addToSet: { upvoteUsers: [username] }
                     });
                     upvotes += 2;
                 } else if (!upvoteList.includes(username)) {
+                    console.log("juerhfd");
                     DBresponse.updateOne({ _id: responseID }, {
                         $inc: { upvotes: 1 },
-                        $addToSet: { upvoteUsers: username }
+                        $addToSet: { upvoteUsers: [username] }
+                        
+                    }, function(err, result){
+                        if(err){
+                            console.log(err);
+                        }else{
+                            console.log(result);
+                        }
                     });
+                    
                     upvotes++;
                 }
                 //res.send({ value: updoots });
             } else {
-                if (req.body.type == "downdoot") {
+                if (req.body.type === "downdoot") {
                     if (upvoteList.includes(username)) {
                         DBresponse.updateOne({ _id: responseID }, {
-                            $addToSet: { downvoteUsers: username },
+                            $addToSet: { downvoteUsers: [username] },
                             $pull: { upvoteUsers: username },
                             $inc: { upvotes: -2 }
+                        }, function(err, result){
+                            if(err){
+                                console.log(err)
+                            }else{
+                                console.log(result);
+                            }
                         });
                         upvotes -= 2;
                     } else if (!downvoteList.includes(username)) {
+                        console.log("downvote");
                         DBresponse.updateOne({ _id: responseID }, {
                             $inc: { upvotes: -1 },
-                            $addToSet: { downvoteUsers: username }
+                            $addToSet: { downvoteUsers: [username] }
+                        }, function(err,result){
+                            if(err){
+                                console.log(err);
+                            }else{
+                                console.log(result);
+                            }
                         });
                         upvotes--;
                     }
