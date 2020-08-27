@@ -71,6 +71,20 @@
               style="width: 50px;"></button>
           <script>
             $(document).ready(function () {
+              $.ajax({url: '/vote/<%=responseArray[i]._id%>',
+              type: 'GET',
+              success: function(data){
+                console.log(data);
+                $("#tam_counter_<%=responseArray[i]._id%>").html(data.tams + " Tams");
+                if(data.status==='upvote'){
+                  $('#question_upvote_<%=responseArray[i]._id%>').addClass('btn-primary');
+                }else{
+                  if(data.status ==='downvote'){
+                    $('#question_downvote_<%=responseArray[i]._id%>').addClass('btn-danger');
+                  }
+                }
+              }
+            });
               // $(".toast-upvote").toast('show');
               // $(".toast-downvote").toast('show');
               //Temporary fix, toasts won't dissappear since the jquery isn't loaded until the end of the page

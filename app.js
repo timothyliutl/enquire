@@ -479,6 +479,35 @@ app.post('/view-question/:questionID', function (req, res) {
 
 //Updoots and downdoots get and post requests
 //Change this in the future so it edits values in the database
+
+app.get('/vote/:questionID', function(req,res){
+var username = req.user.username;
+var responseID = req.params.questionID;
+DBresponse.findOne({_id: responseID}).exec(function(err,doc){
+if(err){
+    res.render('404errorpage');
+    console.log(err);
+}else{
+    var upvoteList = doc.upvoteUsers;
+    var downvoteList = doc.downvoteUsers;
+    var tams = upvoteList.length - downvoteList.length;
+    
+    var status;
+    if(upvoteList.includes(username)){
+        status = 'upvote';
+    }else{
+        if(downvoteList.includes(username)){
+            status = 'downvote';
+        }else{
+            status = 'neutral';
+        }
+    }
+    res.send({tams: tams, status: status});
+}
+});
+
+});
+
 app.post("/vote/:questionID", function(req, res) {
     var username = req.user.username;
     var responseID = req.params.questionID;
@@ -516,6 +545,14 @@ app.post("/vote/:questionID", function(req, res) {
                     });
                     
                     upvotes++;
+                }else{
+                    console.log('unupvote');
+                    DBresponse.updateOne({ _id: responseID }, {
+                        $inc: { upvotes: -1 },
+                        $pull: { upvoteUsers: username },
+                        
+                    });
+                    upvotes--;
                 }
                 //res.send({ value: updoots });
             } else {
@@ -546,6 +583,20 @@ app.post("/vote/:questionID", function(req, res) {
                             }
                         });
                         upvotes--;
+                    } else{
+                        console.log('undownvote');
+                        DBresponse.updateOne({ _id: responseID }, {
+                            $inc: { downvotes: -1 },
+                            $pull: { downvoteUsers: username },
+                            
+                        }, function(err,result){
+                            if(err){
+                                console.log(err);
+                            }else{
+                                console.log(result);
+                            }
+                        });
+                        upvotes++;
                     }
                 }
             }
