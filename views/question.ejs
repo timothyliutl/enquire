@@ -71,29 +71,35 @@
               style="width: 50px;"></button>
           <script>
             $(document).ready(function () {
-              $.ajax({url: '/vote/<%=responseArray[i]._id%>',
-              type: 'GET',
-              success: function(data){
-                console.log(data);
-                $("#tam_counter_<%=responseArray[i]._id%>").html(data.tams + " Tams");
-                if(data.status==='upvote'){
-                  $('#question_upvote_<%=responseArray[i]._id%>').addClass('btn-primary');
-                }else{
-                  if(data.status ==='downvote'){
-                    $('#question_downvote_<%=responseArray[i]._id%>').addClass('btn-danger');
+              $.ajax({
+                url: '/vote/<%=responseArray[i]._id%>',
+                type: 'GET',
+                success: function (data) {
+                  console.log(data);
+                  $("#tam_counter_<%=responseArray[i]._id%>").html(data.tams + " Tams");
+                  if (data.status === 'upvote') {
+                    $('#question_upvote_<%=responseArray[i]._id%>').addClass('btn-primary');
+                  } else {
+                    if (data.status === 'downvote') {
+                      $('#question_downvote_<%=responseArray[i]._id%>').addClass('btn-danger');
+                    }
                   }
                 }
-              }
-            });
+              });
               // $(".toast-upvote").toast('show');
               // $(".toast-downvote").toast('show');
               //Temporary fix, toasts won't dissappear since the jquery isn't loaded until the end of the page
               $("#question_upvote_<%=responseArray[i]._id%>").click(function () {
-                $('#question_upvote_<%=responseArray[i]._id%>').addClass('btn-primary');
-                $('#question_downvote_<%=responseArray[i]._id%>').removeClass('btn-danger');
-              
-                $(".toast-upvote").toast({ delay: 5000 });
-                $(".toast-upvote").toast('show');
+                if ($('#question_upvote_<%=responseArray[i]._id%>').hasClass('btn-primary')) {
+                  $('#question_upvote_<%=responseArray[i]._id%>').removeClass('btn-primary')
+                } else {
+                  $('#question_upvote_<%=responseArray[i]._id%>').addClass('btn-primary');
+                  $('#question_downvote_<%=responseArray[i]._id%>').removeClass('btn-danger');
+
+                  $(".toast-upvote").toast({ delay: 5000 });
+                  $(".toast-upvote").toast('show');
+                }
+
 
                 $.ajax({
                   url: '/vote/<%=responseArray[i]._id%>',
@@ -121,12 +127,18 @@
           <script>
             $(document).ready(function () {
               $("#question_downvote_<%=responseArray[i]._id%>").click(function () {
-                $('#question_upvote_<%=responseArray[i]._id%>').removeClass('btn-primary');
-                $('#question_downvote_<%=responseArray[i]._id%>').addClass('btn-danger');
-                $(".toast").toast('hide');
-                $(".toast-downvote").toast({ delay: 5000 });
-                $(".toast-downvote").toast('show');
+                if ($('#question_downvote_<%=responseArray[i]._id%>').hasClass('btn-danger')) {
+                  $('#question_downvote_<%=responseArray[i]._id%>').removeClass('btn-danger');
+                } else {
 
+
+
+                  $('#question_upvote_<%=responseArray[i]._id%>').removeClass('btn-primary');
+                  $('#question_downvote_<%=responseArray[i]._id%>').addClass('btn-danger');
+                  $(".toast").toast('hide');
+                  $(".toast-downvote").toast({ delay: 5000 });
+                  $(".toast-downvote").toast('show');
+                }
                 $.ajax({
                   url: '/vote/<%=responseArray[i]._id%>',
                   type: "POST",
@@ -141,8 +153,8 @@
                 });
               });
             });
-            
-            
+
+
           </script>
 
 

@@ -205,7 +205,7 @@ var response = {};
 //TODO: add this array to the database and not have it hardcoded in here
 //var courses = DBcourse.find({}, { _id: 1 }).lean();
 //courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
-DBcourse.find({}, { _id: 1 }).lean().exec(function(err, doc) {
+DBcourse.find({}, { _id: 1 }).lean().exec(function (err, doc) {
 
 });
 courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
@@ -278,21 +278,21 @@ app.get('/home/query/:course', function (req, res) {
 app.get("/question", function (req, res) {
 
     if (req.isAuthenticated()) {
-        DBcourse.find({}, { _id: 1 }).lean().exec(function(err,doc){
-            if(err){
+        DBcourse.find({}, { _id: 1 }).lean().exec(function (err, doc) {
+            if (err) {
                 res.render('404errorpage');
                 console.log(err);
-            }else{
+            } else {
                 var coursenames = [];
-                for(i in doc){
+                for (i in doc) {
                     coursenames.push(doc[i]._id);
                 }
-                
-                res.render("index", { date: days[day.getDay()], courselist: coursenames});
+
+                res.render("index", { date: days[day.getDay()], courselist: coursenames });
             }
-    
+
         });
-        
+
     } else {
         res.redirect("/login");
     }
@@ -426,7 +426,7 @@ app.get("/user/:userID", function (req, res) {
 });
 
 //Need to find a way to pass in the question ID to the ejs file and from the ejs file to a redirectable link
-app.get("/view-question/:questionID", function(req, res) {
+app.get("/view-question/:questionID", function (req, res) {
 
     if (req.isAuthenticated) {
         DBquestion.findOne({ _id: req.params.questionID }, function (err, question) {
@@ -435,7 +435,7 @@ app.get("/view-question/:questionID", function(req, res) {
                 res.render("404errorpage");
             } else {
 
-                DBresponse.find({ question: req.params.questionID }, function(err, responseArray) {
+                DBresponse.find({ question: req.params.questionID }, function (err, responseArray) {
                     if (err) {
                         console.log(err);
                     } else {
@@ -480,38 +480,39 @@ app.post('/view-question/:questionID', function (req, res) {
 //Updoots and downdoots get and post requests
 //Change this in the future so it edits values in the database
 
-app.get('/vote/:questionID', function(req,res){
-var username = req.user.username;
-var responseID = req.params.questionID;
-DBresponse.findOne({_id: responseID}).exec(function(err,doc){
-if(err){
-    res.render('404errorpage');
-    console.log(err);
-}else{
-    var upvoteList = doc.upvoteUsers;
-    var downvoteList = doc.downvoteUsers;
-    var tams = upvoteList.length - downvoteList.length;
-    
-    var status;
-    if(upvoteList.includes(username)){
-        status = 'upvote';
-    }else{
-        if(downvoteList.includes(username)){
-            status = 'downvote';
-        }else{
-            status = 'neutral';
-        }
-    }
-    res.send({tams: tams, status: status});
-}
-});
-
-});
-
-app.post("/vote/:questionID", function(req, res) {
+app.get('/vote/:questionID', function (req, res) {
     var username = req.user.username;
     var responseID = req.params.questionID;
-    DBresponse.findOne({ _id: responseID }, { upvoteUsers: 1, downvoteUsers: 1 }).exec(function(err, doc) {
+    DBresponse.findOne({ _id: responseID }).exec(function (err, doc) {
+        if (err) {
+            res.render('404errorpage');
+            console.log(err);
+        } else {
+            var upvoteList = doc.upvoteUsers;
+            var downvoteList = doc.downvoteUsers;
+            var tams = upvoteList.length - downvoteList.length;
+
+            var status;
+            if (upvoteList.includes(username)) {
+                status = 'upvote';
+            } else {
+                if (downvoteList.includes(username)) {
+                    status = 'downvote';
+                } else {
+                    status = 'neutral';
+                }
+            }
+            res.send({ tams: tams, status: status });
+        }
+    });
+
+});
+
+app.post("/vote/:questionID", function (req, res) {
+    //Issue lies in the transition between upvote and downvote without going into a neutral position
+    var username = req.user.username;
+    var responseID = req.params.questionID;
+    DBresponse.findOne({ _id: responseID }).exec(function (err, doc) {
         if (err) {
             console.log(err);
         } else {
@@ -519,38 +520,50 @@ app.post("/vote/:questionID", function(req, res) {
             upvoteList = doc.upvoteUsers;
             downvoteList = doc.downvoteUsers;
             upvotes = upvoteList.length - downvoteList.length;
-            
+
             if (req.body.type === "updoot") {
-                console.log(!upvoteList.includes(username));
+               
                 if (downvoteList.includes(username)) {
-                    
+                    console.log('pls work');
                     DBresponse.updateOne({ _id: responseID }, {
-                        $inc: { upvotes: 2 },
+                      //  $inc: { upvotes: 2 },
                         $pull: { downvoteUsers: username },
                         $addToSet: { upvoteUsers: [username] }
+                    }, function(err,result){
+                        //Don't know why but the call back function is a must have in order for the database to update
+                        if(err){
+                            console.log(err);
+                        }
                     });
                     upvotes += 2;
                 } else if (!upvoteList.includes(username)) {
                     console.log("juerhfd");
                     DBresponse.updateOne({ _id: responseID }, {
-                        $inc: { upvotes: 1 },
-                        $addToSet: { upvoteUsers: [username] }
-                        
-                    }, function(err, result){
-                        if(err){
+                      //  $inc: { upvotes: 1 },
+                        $addToSet: { upvoteUsers: [username] },
+                        $pull:{downvoteUsers: username}
+
+                    }, function (err, result) {
+                        if (err) {
                             console.log(err);
-                        }else{
+                        } else {
                             console.log(result);
                         }
                     });
-                    
+
                     upvotes++;
-                }else{
+                } else {
                     console.log('unupvote');
                     DBresponse.updateOne({ _id: responseID }, {
-                        $inc: { upvotes: -1 },
-                        $pull: { upvoteUsers: username },
-                        
+                      //  $inc: { upvotes: -1 },
+                        $pull: { upvoteUsers: username},
+
+                    }, function (err, result) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log(result);
+                        }
                     });
                     upvotes--;
                 }
@@ -561,11 +574,11 @@ app.post("/vote/:questionID", function(req, res) {
                         DBresponse.updateOne({ _id: responseID }, {
                             $addToSet: { downvoteUsers: [username] },
                             $pull: { upvoteUsers: username },
-                            $inc: { upvotes: -2 }
-                        }, function(err, result){
-                            if(err){
+                         //   $inc: { upvotes: -2 }
+                        }, function (err, result) {
+                            if (err) {
                                 console.log(err)
-                            }else{
+                            } else {
                                 console.log(result);
                             }
                         });
@@ -573,26 +586,26 @@ app.post("/vote/:questionID", function(req, res) {
                     } else if (!downvoteList.includes(username)) {
                         console.log("downvote");
                         DBresponse.updateOne({ _id: responseID }, {
-                            $inc: { upvotes: -1 },
-                            $addToSet: { downvoteUsers: [username] }
-                        }, function(err,result){
-                            if(err){
+                        //    $inc: { upvotes: -1 },
+                            $addToSet: { downvoteUsers: [username]}
+                        }, function (err, result) {
+                            if (err) {
                                 console.log(err);
-                            }else{
+                            } else {
                                 console.log(result);
                             }
                         });
                         upvotes--;
-                    } else{
+                    } else {
                         console.log('undownvote');
                         DBresponse.updateOne({ _id: responseID }, {
-                            $inc: { downvotes: -1 },
-                            $pull: { downvoteUsers: username },
-                            
-                        }, function(err,result){
-                            if(err){
+                         //   $inc: { upvotes: 1 },
+                            $pull: { downvoteUsers: username},
+
+                        }, function (err, result) {
+                            if (err) {
                                 console.log(err);
-                            }else{
+                            } else {
                                 console.log(result);
                             }
                         });
