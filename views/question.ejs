@@ -31,6 +31,54 @@
       </div>
     </div>
   </div>
+  <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
+    <div class="toast-undownvote toast" style="position: fixed; right: 40px; top: 60px; width: 200px;">
+      <div class="toast-header">
+        <strong>enQuire</strong>
+      </div>
+      <div class="toast-body">
+        Removed Downvote
+      </div>
+    </div>
+  </div>
+  <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
+    <div class="toast-unupvote toast" style="position: fixed; right: 40px; top: 60px; width: 200px;">
+      <div class="toast-header">
+        <strong>enQuire</strong>
+      </div>
+      <div class="toast-body">
+        Removed Upvote
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Response</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="" id="editform" method="POST">
+            <div class="form-group">
+            <textarea name="editbody" id="modal-edit-body" cols="30" rows="10" class="form-control" style="height: 300px;"></textarea>
+          </div>
+          
+          
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+
   <!--
         Add 3 columns 2 being rather small and the middle being the largest one
         Find out how to store images to the database
@@ -92,6 +140,8 @@
               $("#question_upvote_<%=responseArray[i]._id%>").click(function () {
                 if ($('#question_upvote_<%=responseArray[i]._id%>').hasClass('btn-primary')) {
                   $('#question_upvote_<%=responseArray[i]._id%>').removeClass('btn-primary')
+                  $(".toast").toast('hide');
+                  $(".toast-unupvote").toast('show');
                 } else {
                   $('#question_upvote_<%=responseArray[i]._id%>').addClass('btn-primary');
                   $('#question_downvote_<%=responseArray[i]._id%>').removeClass('btn-danger');
@@ -129,6 +179,9 @@
               $("#question_downvote_<%=responseArray[i]._id%>").click(function () {
                 if ($('#question_downvote_<%=responseArray[i]._id%>').hasClass('btn-danger')) {
                   $('#question_downvote_<%=responseArray[i]._id%>').removeClass('btn-danger');
+                  $(".toast").toast('hide');
+                  $(".toast-undownvote").toast('show');
+
                 } else {
 
 
@@ -166,11 +219,36 @@
               <br />
               <p style="text-align: right;"><a href=""><%=responseArray[i].author%></a></p>
               <p style="text-align: right;">Verified Tutor</p>
+              <% if(responseArray[i].author == user){ %>
+                <button class="btn btn-success float-right" style="text-align: right; visibility: visible;" id="edit_<%=responseArray[i]._id%>">Edit Response</button>
+              
+              <% } %>
+
             </div>
           </div>
         </div>
 
       </div>
+
+      
+      <script>
+      //Add Button modal javascript in here
+      $('#edit_<%=responseArray[i]._id%>').click(function(){
+        
+        $.ajax({url: '/edit-response/<%=responseArray[i]._id%>',
+      type:'GET',
+      success: function(data){
+        console.log(data.body);
+        $('#modal-edit-body').html(data.body);
+        $('#editmodal').modal('show');
+        $('#editform').attr('action', '/edit-response/<%=responseArray[i]._id%>');
+      }
+      })
+      });
+
+      </script>
+     
+
       <% } %>
 
 

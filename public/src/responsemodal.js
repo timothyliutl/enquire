@@ -9,6 +9,6 @@ $('#responsetextarea').on('input', function(){
     
     $('#modalbodytext').text($('#responsetextarea').val());
     MathJax.Hub.Queue(["Typeset",MathJax.Hub]); //This code is IMPORTANT, will update the mathjax everytime the keyboard is typed on
-    console.log($('#responsetextarea').html());
+    //ßconsole.log($('#responsetextarea').html());
 });
 

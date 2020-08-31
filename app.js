@@ -440,7 +440,7 @@ app.get("/view-question/:questionID", function (req, res) {
                         console.log(err);
                     } else {
 
-                        res.render("question", { question: question, questionID: req.params.questionID, responseArray: responseArray });
+                        res.render("question", { question: question, questionID: req.params.questionID, responseArray: responseArray, user: req.user.username });
                     }
                 })
 
@@ -522,16 +522,16 @@ app.post("/vote/:questionID", function (req, res) {
             upvotes = upvoteList.length - downvoteList.length;
 
             if (req.body.type === "updoot") {
-               
+
                 if (downvoteList.includes(username)) {
                     console.log('pls work');
                     DBresponse.updateOne({ _id: responseID }, {
-                      //  $inc: { upvotes: 2 },
+                        //  $inc: { upvotes: 2 },
                         $pull: { downvoteUsers: username },
                         $addToSet: { upvoteUsers: [username] }
-                    }, function(err,result){
+                    }, function (err, result) {
                         //Don't know why but the call back function is a must have in order for the database to update
-                        if(err){
+                        if (err) {
                             console.log(err);
                         }
                     });
@@ -539,9 +539,9 @@ app.post("/vote/:questionID", function (req, res) {
                 } else if (!upvoteList.includes(username)) {
                     console.log("juerhfd");
                     DBresponse.updateOne({ _id: responseID }, {
-                      //  $inc: { upvotes: 1 },
+                        //  $inc: { upvotes: 1 },
                         $addToSet: { upvoteUsers: [username] },
-                        $pull:{downvoteUsers: username}
+                        $pull: { downvoteUsers: username }
 
                     }, function (err, result) {
                         if (err) {
@@ -555,8 +555,8 @@ app.post("/vote/:questionID", function (req, res) {
                 } else {
                     console.log('unupvote');
                     DBresponse.updateOne({ _id: responseID }, {
-                      //  $inc: { upvotes: -1 },
-                        $pull: { upvoteUsers: username},
+                        //  $inc: { upvotes: -1 },
+                        $pull: { upvoteUsers: username },
 
                     }, function (err, result) {
                         if (err) {
@@ -574,7 +574,7 @@ app.post("/vote/:questionID", function (req, res) {
                         DBresponse.updateOne({ _id: responseID }, {
                             $addToSet: { downvoteUsers: [username] },
                             $pull: { upvoteUsers: username },
-                         //   $inc: { upvotes: -2 }
+                            //   $inc: { upvotes: -2 }
                         }, function (err, result) {
                             if (err) {
                                 console.log(err)
@@ -586,8 +586,8 @@ app.post("/vote/:questionID", function (req, res) {
                     } else if (!downvoteList.includes(username)) {
                         console.log("downvote");
                         DBresponse.updateOne({ _id: responseID }, {
-                        //    $inc: { upvotes: -1 },
-                            $addToSet: { downvoteUsers: [username]}
+                            //    $inc: { upvotes: -1 },
+                            $addToSet: { downvoteUsers: [username] }
                         }, function (err, result) {
                             if (err) {
                                 console.log(err);
@@ -599,8 +599,8 @@ app.post("/vote/:questionID", function (req, res) {
                     } else {
                         console.log('undownvote');
                         DBresponse.updateOne({ _id: responseID }, {
-                         //   $inc: { upvotes: 1 },
-                            $pull: { downvoteUsers: username},
+                            //   $inc: { upvotes: 1 },
+                            $pull: { downvoteUsers: username },
 
                         }, function (err, result) {
                             if (err) {
@@ -621,6 +621,45 @@ app.post("/vote/:questionID", function (req, res) {
     // downvoteList = voteLists.downvoteUsers;
     console.log(req.body.type);
 });
+
+app.get('/edit-response/:responseID', function (req, res) {
+    if (req.isAuthenticated()) {
+        var responseID = req.params.responseID;
+        DBresponse.findOne({ _id: responseID }).exec(function (err, doc) {
+            if (err) {
+                console.log(err);
+            } else {
+
+                res.send({ body: doc.body });
+            }
+        });
+    } else {
+        res.redirect('/login');
+    }
+});
+
+app.post('/edit-response/:responseID', function (req, res) {
+    if (req.isAuthenticated()) {
+        var username = req.user.username;
+        var responseID = req.params.responseID;
+        console.log(responseID);
+        console.log(req.body.editbody);
+
+        DBresponse.updateOne({ _id: responseID }, {
+            $set: { body: req.body.editform }
+        }, { upsert: false }, function (err, response) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log('success');
+            }
+        });
+    } else {
+        res.redirect('login');
+    }
+    res.redirect('/home');
+});
+
 
 app.get("*", function (req, res) {
     res.render("404errorpage");
