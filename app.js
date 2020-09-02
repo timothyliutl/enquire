@@ -202,34 +202,6 @@ var days = [
 ];
 var response = {};
 
-//TODO: add this array to the database and not have it hardcoded in here
-//var courses = DBcourse.find({}, { _id: 1 }).lean();
-//courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
-DBcourse.find({}, { _id: 1 }).lean().exec(function (err, doc) {
-
-});
-courses = ["APSC 112", "APSC 172", "APSC 174", "Muck Fod 1"];
-
-//This is where we want to compile data from the database into a list, right now the ejs file is 
-//expecting a list of javascript objects as shown below, this should model the objects already in the response database
-var questionList = [];
-
-function getQuestions() {
-    DBquestion.find({}).sort({ date: -1 }).limit(20).lean().skip(0).exec(function (err, doc) {
-        if (err) {
-            console.log(err);
-        }
-
-        dummyresponselist = doc;
-        //console.log(doc);
-
-    });
-    //Don't really need this function anymore
-}
-
-
-
-
 //Everything below this comment are functions that run when a website is loaded
 
 app.get("/", function (req, res) {
@@ -428,7 +400,7 @@ app.get("/user/:userID", function (req, res) {
 //Need to find a way to pass in the question ID to the ejs file and from the ejs file to a redirectable link
 app.get("/view-question/:questionID", function (req, res) {
 
-    if (req.isAuthenticated) {
+    if (req.isAuthenticated()) {
         DBquestion.findOne({ _id: req.params.questionID }, function (err, question) {
             if (err) {
                 console.log(err);
@@ -457,7 +429,7 @@ app.get("/view-question/:questionID", function (req, res) {
 app.post('/view-question/:questionID', function (req, res) {
     var replytext = req.body.response;
 
-    if (req.isAuthenticated) {
+    if (req.isAuthenticated()) {
         newResponse = new DBresponse({
             question: req.params.questionID,
             body: replytext,
@@ -639,23 +611,24 @@ app.get('/edit-response/:responseID', function (req, res) {
 });
 
 app.post('/edit-response/:responseID', function (req, res) {
-    if (req.isAuthenticated()) {
+    if (req.isAuthenticated()){
         var username = req.user.username;
         var responseID = req.params.responseID;
         console.log(responseID);
         console.log(req.body.editbody);
 
         DBresponse.updateOne({ _id: responseID }, {
-            $set: { body: req.body.editform }
-        }, { upsert: false }, function (err, response) {
+            $set: {'body': req.body.editbody}
+        }, function (err, response) {
             if (err) {
                 console.log(err);
             } else {
+                console.log(response);
                 console.log('success');
             }
         });
     } else {
-        res.redirect('login');
+        res.redirect('/login');
     }
     res.redirect('/home');
 });
@@ -671,7 +644,5 @@ app.listen(3000, function () {
 });
 //const in JS for things inside a variable aren't always constant, the variable itself just can't be reassigned
 
-//Next Things to work on, adding parameters to hyperlinks for the questions
 //Work on adding templating to the ejs files
 //Find out how to upload images to mongo database
-//Find how to fix the issue of questions not loading as soon as they are posted (something to do with query not loading in time)
