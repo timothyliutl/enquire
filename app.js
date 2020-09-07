@@ -14,7 +14,7 @@ var ObjectId = require('mongodb').ObjectID;
 
 var storage = multer.diskStorage({
     destination: './public/uploads',
-    filename: function (req, file, cb) {
+    filename: function(req, file, cb) {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
 });
@@ -63,7 +63,7 @@ const questionSchema = new mongoose.Schema({
         immutable: true
     },
     body: String,
-    tags: String, //evenutally needs to be made into a list as opposed to a string
+    tags: [String], //evenutally needs to be made into a list as opposed to a string
     course: {
         type: String,
         required: true,
@@ -204,13 +204,13 @@ var response = {};
 
 //Everything below this comment are functions that run when a website is loaded
 
-app.get("/", function (req, res) {
+app.get("/", function(req, res) {
 
     res.sendFile(__dirname + "/HTML/home-notloggedin.html");
 
 });
 
-app.get('/home', function (req, res) {
+app.get('/home', function(req, res) {
     if (req.isAuthenticated()) {
 
         res.redirect('/home/page/1')
@@ -220,15 +220,15 @@ app.get('/home', function (req, res) {
 
 });
 
-app.get('/home/page/:pagenum', function (req, res) {
+app.get('/home/page/:pagenum', function(req, res) {
     if (req.isAuthenticated()) {
-        DBquestion.find({}).sort({ date: -1 }).limit(20).lean().skip(req.params.pagenum - 1).exec(function (err, doc) {
+        DBquestion.find({}).sort({ date: -1 }).limit(20).lean().skip(req.params.pagenum - 1).exec(function(err, doc) {
             if (err) {
                 console.log(err);
                 res.render("404errorpage");
             }
 
-            DBquestion.countDocuments({}, function (err, result) {
+            DBquestion.countDocuments({}, function(err, result) {
                 res.render('home', { list: doc, currentPage: req.params.pagenum, pages: Math.ceil(result / 20) });
             });
 
@@ -240,17 +240,17 @@ app.get('/home/page/:pagenum', function (req, res) {
     }
 });
 
-app.get('/home/query/:course', function (req, res) {
+app.get('/home/query/:course', function(req, res) {
     if (res.isAuthenticated()) {
         res.send(req.params.course);
     }
 });
 
 
-app.get("/question", function (req, res) {
+app.get("/question", function(req, res) {
 
     if (req.isAuthenticated()) {
-        DBcourse.find({}, { _id: 1 }).lean().exec(function (err, doc) {
+        DBcourse.find({}, { _id: 1 }).lean().exec(function(err, doc) {
             if (err) {
                 res.render('404errorpage');
                 console.log(err);
@@ -271,9 +271,9 @@ app.get("/question", function (req, res) {
 });
 
 //After submit button is hit, the code inside here runs and saves all the date into the database, also console logs the information too
-app.post("/question-compositions", function (req, res) {
+app.post("/question-compositions", function(req, res) {
     console.log(req);
-    upload(req, res, function (err) {
+    upload(req, res, function(err) {
         if (err) {
             console.log(err);
             res.redirect('/question-compositions');
@@ -287,7 +287,7 @@ app.post("/question-compositions", function (req, res) {
                 author: req.user.username,
                 date: date,
                 body: req.body.questionBody,
-                tags: req.body.tags, //eventually need to make this a list, as opposed to a string
+                tags: req.body.tags.split(', '), //eventually need to make this a list, as opposed to a string
                 course: req.body.course
             });
             question.save();
@@ -307,12 +307,12 @@ app.post("/question-compositions", function (req, res) {
 });
 
 
-app.get("/login", function (req, res) {
+app.get("/login", function(req, res) {
     if (req.isAuthenticated()) {
         res.redirect('/home');
         //Makes it so someone can't go back to the login screen if they are already logged in
     } else {
-        res.sendFile(__dirname + "/HTML/login.html", function (err) {
+        res.sendFile(__dirname + "/HTML/login.html", function(err) {
             if (err) {
                 console.log(err);
             }
@@ -323,19 +323,19 @@ app.get("/login", function (req, res) {
 
 //TODO: redirect to profile page template with approriate information
 //Curently just redirects to the question composition page
-app.post("/login", function (req, res) {
+app.post("/login", function(req, res) {
     const user = new User({
         username: req.body.username,
         password: req.body.password
     });
 
-    req.login(user, function (err) {
+    req.login(user, function(err) {
 
         if (err) {
             console.log(err);
         } else {
             //why can user be interchangble replaced with passport?
-            User.authenticate("local")(req, res, function () {
+            User.authenticate("local")(req, res, function() {
                 res.redirect('/question');
             });
         }
@@ -343,12 +343,12 @@ app.post("/login", function (req, res) {
 });
 
 
-app.get("/profile", function (req, res) {
+app.get("/profile", function(req, res) {
     res.render('profile');
 });
 
 
-app.get("/register", function (req, res) {
+app.get("/register", function(req, res) {
     if (req.isAuthenticated()) {
         res.redirect('/home')
     } else {
@@ -358,7 +358,7 @@ app.get("/register", function (req, res) {
 
 
 
-app.post("/register", function (req, res) {
+app.post("/register", function(req, res) {
 
     User.register(
         //This used to be a javascript object, but to follow documentation
@@ -366,12 +366,12 @@ app.post("/register", function (req, res) {
         //Update: for some reason the object has to stay here, probably because the username was stored in a javascript object too
         { username: req.body.username, email: req.body.email },
         req.body.password,
-        function (err, user) {
+        function(err, user) {
             if (err) {
                 console.log(err);
                 res.render('register', { error: err });
             } else {
-                passport.authenticate("local")(req, res, function () {
+                passport.authenticate("local")(req, res, function() {
                     res.redirect("/home");
                 });
             }
@@ -380,14 +380,14 @@ app.post("/register", function (req, res) {
 
 });
 
-app.get('/logout', function (req, res) {
+app.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/login');
 });
 
-app.get("/user/:userID", function (req, res) {
+app.get("/user/:userID", function(req, res) {
     //req.params.ID will be the username and will be used to get user specific information from the database into the profile page
-    User.findOne({ username: req.params.userID }, function (err, doc) {
+    User.findOne({ username: req.params.userID }, function(err, doc) {
         if (err) {
             console.log(err);
         }
@@ -398,16 +398,16 @@ app.get("/user/:userID", function (req, res) {
 });
 
 //Need to find a way to pass in the question ID to the ejs file and from the ejs file to a redirectable link
-app.get("/view-question/:questionID", function (req, res) {
+app.get("/view-question/:questionID", function(req, res) {
 
     if (req.isAuthenticated()) {
-        DBquestion.findOne({ _id: req.params.questionID }, function (err, question) {
+        DBquestion.findOne({ _id: req.params.questionID }, function(err, question) {
             if (err) {
                 console.log(err);
                 res.render("404errorpage");
             } else {
 
-                DBresponse.find({ question: req.params.questionID }, function (err, responseArray) {
+                DBresponse.find({ question: req.params.questionID }, function(err, responseArray) {
                     if (err) {
                         console.log(err);
                     } else {
@@ -426,7 +426,7 @@ app.get("/view-question/:questionID", function (req, res) {
 
 });
 
-app.post('/view-question/:questionID', function (req, res) {
+app.post('/view-question/:questionID', function(req, res) {
     var replytext = req.body.response;
 
     if (req.isAuthenticated()) {
@@ -452,10 +452,10 @@ app.post('/view-question/:questionID', function (req, res) {
 //Updoots and downdoots get and post requests
 //Change this in the future so it edits values in the database
 
-app.get('/vote/:questionID', function (req, res) {
+app.get('/vote/:questionID', function(req, res) {
     var username = req.user.username;
     var responseID = req.params.questionID;
-    DBresponse.findOne({ _id: responseID }).exec(function (err, doc) {
+    DBresponse.findOne({ _id: responseID }).exec(function(err, doc) {
         if (err) {
             res.render('404errorpage');
             console.log(err);
@@ -480,11 +480,11 @@ app.get('/vote/:questionID', function (req, res) {
 
 });
 
-app.post("/vote/:questionID", function (req, res) {
+app.post("/vote/:questionID", function(req, res) {
     //Issue lies in the transition between upvote and downvote without going into a neutral position
     var username = req.user.username;
     var responseID = req.params.questionID;
-    DBresponse.findOne({ _id: responseID }).exec(function (err, doc) {
+    DBresponse.findOne({ _id: responseID }).exec(function(err, doc) {
         if (err) {
             console.log(err);
         } else {
@@ -501,7 +501,7 @@ app.post("/vote/:questionID", function (req, res) {
                         //  $inc: { upvotes: 2 },
                         $pull: { downvoteUsers: username },
                         $addToSet: { upvoteUsers: [username] }
-                    }, function (err, result) {
+                    }, function(err, result) {
                         //Don't know why but the call back function is a must have in order for the database to update
                         if (err) {
                             console.log(err);
@@ -515,7 +515,7 @@ app.post("/vote/:questionID", function (req, res) {
                         $addToSet: { upvoteUsers: [username] },
                         $pull: { downvoteUsers: username }
 
-                    }, function (err, result) {
+                    }, function(err, result) {
                         if (err) {
                             console.log(err);
                         } else {
@@ -530,7 +530,7 @@ app.post("/vote/:questionID", function (req, res) {
                         //  $inc: { upvotes: -1 },
                         $pull: { upvoteUsers: username },
 
-                    }, function (err, result) {
+                    }, function(err, result) {
                         if (err) {
                             console.log(err);
                         } else {
@@ -547,7 +547,7 @@ app.post("/vote/:questionID", function (req, res) {
                             $addToSet: { downvoteUsers: [username] },
                             $pull: { upvoteUsers: username },
                             //   $inc: { upvotes: -2 }
-                        }, function (err, result) {
+                        }, function(err, result) {
                             if (err) {
                                 console.log(err)
                             } else {
@@ -560,7 +560,7 @@ app.post("/vote/:questionID", function (req, res) {
                         DBresponse.updateOne({ _id: responseID }, {
                             //    $inc: { upvotes: -1 },
                             $addToSet: { downvoteUsers: [username] }
-                        }, function (err, result) {
+                        }, function(err, result) {
                             if (err) {
                                 console.log(err);
                             } else {
@@ -574,7 +574,7 @@ app.post("/vote/:questionID", function (req, res) {
                             //   $inc: { upvotes: 1 },
                             $pull: { downvoteUsers: username },
 
-                        }, function (err, result) {
+                        }, function(err, result) {
                             if (err) {
                                 console.log(err);
                             } else {
@@ -594,10 +594,10 @@ app.post("/vote/:questionID", function (req, res) {
     console.log(req.body.type);
 });
 
-app.get('/edit-response/:responseID', function (req, res) {
+app.get('/edit-response/:responseID', function(req, res) {
     if (req.isAuthenticated()) {
         var responseID = req.params.responseID;
-        DBresponse.findOne({ _id: responseID }).exec(function (err, doc) {
+        DBresponse.findOne({ _id: responseID }).exec(function(err, doc) {
             if (err) {
                 console.log(err);
             } else {
@@ -610,16 +610,16 @@ app.get('/edit-response/:responseID', function (req, res) {
     }
 });
 
-app.post('/edit-response/:responseID', function (req, res) {
-    if (req.isAuthenticated()){
+app.post('/edit-response/:responseID', function(req, res) {
+    if (req.isAuthenticated()) {
         var username = req.user.username;
         var responseID = req.params.responseID;
         console.log(responseID);
         console.log(req.body.editbody);
 
         DBresponse.updateOne({ _id: responseID }, {
-            $set: {'body': req.body.editbody}
-        }, function (err, response) {
+            $set: { 'body': req.body.editbody }
+        }, function(err, response) {
             if (err) {
                 console.log(err);
             } else {
@@ -634,12 +634,12 @@ app.post('/edit-response/:responseID', function (req, res) {
 });
 
 
-app.get("*", function (req, res) {
+app.get("*", function(req, res) {
     res.render("404errorpage");
 });
 
 //Tells what port the website should be running on
-app.listen(3000, function () {
+app.listen(3000, function() {
     console.log("Server running on Port 3000");
 });
 //const in JS for things inside a variable aren't always constant, the variable itself just can't be reassigned

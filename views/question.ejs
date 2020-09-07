@@ -2,298 +2,313 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Enquire Question</title>
-  <%- include('partials/mathjaxandbootstrap')%>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enquire Question</title>
+    <%- include('partials/mathjaxandbootstrap')%>
 </head>
 
 <body style="overflow-x: hidden;">
-  <%- include("partials/navbar.ejs") %>
+    <%- include("partials/navbar.ejs") %>
 
-  <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
-    <div class="toast-upvote toast" style="position: fixed; right: 40px; top: 60px; width: 200px;">
-      <div class="toast-header">
-        <strong>enQuire</strong>
-      </div>
-      <div class="toast-body">
-        Upvoted Post
-      </div>
-    </div>
-  </div>
-  <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
-    <div class="toast-downvote toast" style="position: fixed; right: 40px; top: 60px; width: 200px;">
-      <div class="toast-header">
-        <strong>enQuire</strong>
-      </div>
-      <div class="toast-body">
-        Downvoted Post
-      </div>
-    </div>
-  </div>
-  <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
-    <div class="toast-undownvote toast" style="position: fixed; right: 40px; top: 60px; width: 200px;">
-      <div class="toast-header">
-        <strong>enQuire</strong>
-      </div>
-      <div class="toast-body">
-        Removed Downvote
-      </div>
-    </div>
-  </div>
-  <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
-    <div class="toast-unupvote toast" style="position: fixed; right: 40px; top: 60px; width: 200px;">
-      <div class="toast-header">
-        <strong>enQuire</strong>
-      </div>
-      <div class="toast-body">
-        Removed Upvote
-      </div>
-    </div>
-  </div>
+        <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
+            <div class="toast-upvote toast" style="position: fixed; right: 40px; top: 60px; width: 200px;">
+                <div class="toast-header">
+                    <strong>enQuire</strong>
+                </div>
+                <div class="toast-body">
+                    Upvoted Post
+                </div>
+            </div>
+        </div>
+        <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
+            <div class="toast-downvote toast" style="position: fixed; right: 40px; top: 60px; width: 200px;">
+                <div class="toast-header">
+                    <strong>enQuire</strong>
+                </div>
+                <div class="toast-body">
+                    Downvoted Post
+                </div>
+            </div>
+        </div>
+        <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
+            <div class="toast-undownvote toast" style="position: fixed; right: 40px; top: 60px; width: 200px;">
+                <div class="toast-header">
+                    <strong>enQuire</strong>
+                </div>
+                <div class="toast-body">
+                    Removed Downvote
+                </div>
+            </div>
+        </div>
+        <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
+            <div class="toast-unupvote toast" style="position: fixed; right: 40px; top: 60px; width: 200px;">
+                <div class="toast-header">
+                    <strong>enQuire</strong>
+                </div>
+                <div class="toast-body">
+                    Removed Upvote
+                </div>
+            </div>
+        </div>
 
-  <div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Edit Response</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Response</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-        </div>
-        <div class="modal-body">
-          <form action="" id="editform" method="POST">
-            <div class="form-group">
-            <textarea name="editbody" id="modal-edit-body" cols="30" rows="10" class="form-control" style="height: 300px;"></textarea>
-          </div>
-          
-          
-          
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Save changes</button>
-        </div>
-      </form>
-      </div>
-    </div>
-  </div>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" id="editform" method="POST">
+                            <div class="form-group">
+                                <textarea name="editbody" id="modal-edit-body" cols="30" rows="10" class="form-control" style="height: 300px;"></textarea>
+                            </div>
 
-  <!--
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--
         Add 3 columns 2 being rather small and the middle being the largest one
         Find out how to store images to the database
         Create a screen to present profile and a way to edit it (possibly through another screen)
         Get the drop down menu in the navbar to work
     -->
 
-  <div class="row" style="margin-bottom: 60px;">
-    <%- include("partials/sidebar.ejs")%>
-    <div class="content col-lg-7">
-      <div class="card" style="margin-top: 20px;">
-        <div class="card-header">
-          <h1><%=question.course%></h1>
-        </div>
+        <div class="row" style="margin-bottom: 60px;">
+            <%- include("partials/sidebar.ejs")%>
+                <div class="content col-lg-7">
+                    <div class="card" style="margin-top: 20px;">
+                        <div class="card-header">
+                            <h1>
+                                <%=question.course%>
+                            </h1>
+                        </div>
 
-        <div class="card-body">
-          <div class="card-title">
-            <h1><%=question.title%></h1>
-          </div>
-          <p><%=question.body%></p>
-        </div>
-        <div class="card-footer">
-          <p><%=question.user%> Tags: <%=question.tags%></p>
-        </div>
-      </div>
-      <hr>
-      <h2>Current Answers</h2>
-      <!-- Example existing responses -->
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h1>
+                                    <%=question.title%>
+                                </h1>
+                            </div>
+                            <p>
+                                <%=question.body%>
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            Tags:
+                            <ul>
+                                <% for(i in question.tags){%>
+                                    <li>
+                                        <%=question.tags[i]%>
+                                    </li>
+                                    <% } %>
+                            </ul>
+
+                        </div>
+                    </div>
+                    <hr>
+                    <h2>Current Answers</h2>
+                    <!-- Example existing responses -->
 
 
-      <% for(i in responseArray){%>
-      <div class="row" style="margin-top: 50px; margin-bottom: 50px;">
-        <div class="col-lg-2">
-          <!-- Make these buttons and Script buttons in ejs loops for each response -->
+                    <% for(i in responseArray){%>
+                        <div class="row" style="margin-top: 50px; margin-bottom: 50px;">
+                            <div class="col-lg-2">
+                                <!-- Make these buttons and Script buttons in ejs loops for each response -->
 
-          <button class="btn" id="question_upvote_<%=responseArray[i]._id%>"><img
+                                <button class="btn" id="question_upvote_<%=responseArray[i]._id%>"><img
               src="https://quicksew.ca/wp-content/uploads/2016/11/queens-jacket-07.jpg" alt="updoots"
               style="width: 50px;"></button>
-          <script>
-            $(document).ready(function () {
-              $.ajax({
-                url: '/vote/<%=responseArray[i]._id%>',
-                type: 'GET',
-                success: function (data) {
-                  console.log(data);
-                  $("#tam_counter_<%=responseArray[i]._id%>").html(data.tams + " Tams");
-                  if (data.status === 'upvote') {
-                    $('#question_upvote_<%=responseArray[i]._id%>').addClass('btn-primary');
-                  } else {
-                    if (data.status === 'downvote') {
-                      $('#question_downvote_<%=responseArray[i]._id%>').addClass('btn-danger');
-                    }
-                  }
-                }
-              });
-              // $(".toast-upvote").toast('show');
-              // $(".toast-downvote").toast('show');
-              //Temporary fix, toasts won't dissappear since the jquery isn't loaded until the end of the page
-              $("#question_upvote_<%=responseArray[i]._id%>").click(function () {
-                if ($('#question_upvote_<%=responseArray[i]._id%>').hasClass('btn-primary')) {
-                  $('#question_upvote_<%=responseArray[i]._id%>').removeClass('btn-primary')
-                  $(".toast").toast('hide');
-                  $(".toast-unupvote").toast('show');
-                } else {
-                  $('#question_upvote_<%=responseArray[i]._id%>').addClass('btn-primary');
-                  $('#question_downvote_<%=responseArray[i]._id%>').removeClass('btn-danger');
+                                <script>
+                                    $(document).ready(function() {
+                                        $.ajax({
+                                            url: '/vote/<%=responseArray[i]._id%>',
+                                            type: 'GET',
+                                            success: function(data) {
+                                                console.log(data);
+                                                $("#tam_counter_<%=responseArray[i]._id%>").html(data.tams + " Tams");
+                                                if (data.status === 'upvote') {
+                                                    $('#question_upvote_<%=responseArray[i]._id%>').addClass('btn-primary');
+                                                } else {
+                                                    if (data.status === 'downvote') {
+                                                        $('#question_downvote_<%=responseArray[i]._id%>').addClass('btn-danger');
+                                                    }
+                                                }
+                                            }
+                                        });
+                                        // $(".toast-upvote").toast('show');
+                                        // $(".toast-downvote").toast('show');
+                                        //Temporary fix, toasts won't dissappear since the jquery isn't loaded until the end of the page
+                                        $("#question_upvote_<%=responseArray[i]._id%>").click(function() {
+                                            if ($('#question_upvote_<%=responseArray[i]._id%>').hasClass('btn-primary')) {
+                                                $('#question_upvote_<%=responseArray[i]._id%>').removeClass('btn-primary')
+                                                $(".toast").toast('hide');
+                                                $(".toast-unupvote").toast('show');
+                                            } else {
+                                                $('#question_upvote_<%=responseArray[i]._id%>').addClass('btn-primary');
+                                                $('#question_downvote_<%=responseArray[i]._id%>').removeClass('btn-danger');
 
-                  $(".toast-upvote").toast({ delay: 5000 });
-                  $(".toast-upvote").toast('show');
-                }
-
-
-                $.ajax({
-                  url: '/vote/<%=responseArray[i]._id%>',
-                  type: "POST",
-                  data: {
-                    type: "updoot",
-                    id: '<%=responseArray[i]._id%>'
-                  },
-                  success: function (data) {
-                    console.log(data);
-                    $("#tam_counter_<%=responseArray[i]._id%>").html(data.value + " Tams");
-                  }
-                });
-              });
-            });
-          </script>
+                                                $(".toast-upvote").toast({
+                                                    delay: 5000
+                                                });
+                                                $(".toast-upvote").toast('show');
+                                            }
 
 
-          <h6 style="text-align: center;" id="tam_counter_<%=responseArray[i]._id%>">0 Tams</h6>
+                                            $.ajax({
+                                                url: '/vote/<%=responseArray[i]._id%>',
+                                                type: "POST",
+                                                data: {
+                                                    type: "updoot",
+                                                    id: '<%=responseArray[i]._id%>'
+                                                },
+                                                success: function(data) {
+                                                    console.log(data);
+                                                    $("#tam_counter_<%=responseArray[i]._id%>").html(data.value + " Tams");
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
 
 
-          <button class="btn" id="question_downvote_<%=responseArray[i]._id%>"><img
+                                <h6 style="text-align: center;" id="tam_counter_<%=responseArray[i]._id%>">0 Tams</h6>
+
+
+                                <button class="btn" id="question_downvote_<%=responseArray[i]._id%>"><img
               src="https://media-exp1.licdn.com/dms/image/C4E0BAQEsG87VcXgbow/company-logo_200_200/0?e=2159024400&v=beta&t=lBzainxYpW-4LPSKtWrH-IwqRgWKd5DEifiEtbAN2cw"
               alt="downdoots" style="width: 50px;"></button>
-          <script>
-            $(document).ready(function () {
-              $("#question_downvote_<%=responseArray[i]._id%>").click(function () {
-                if ($('#question_downvote_<%=responseArray[i]._id%>').hasClass('btn-danger')) {
-                  $('#question_downvote_<%=responseArray[i]._id%>').removeClass('btn-danger');
-                  $(".toast").toast('hide');
-                  $(".toast-undownvote").toast('show');
+                                <script>
+                                    $(document).ready(function() {
+                                        $("#question_downvote_<%=responseArray[i]._id%>").click(function() {
+                                            if ($('#question_downvote_<%=responseArray[i]._id%>').hasClass('btn-danger')) {
+                                                $('#question_downvote_<%=responseArray[i]._id%>').removeClass('btn-danger');
+                                                $(".toast").toast('hide');
+                                                $(".toast-undownvote").toast('show');
 
-                } else {
-
-
-
-                  $('#question_upvote_<%=responseArray[i]._id%>').removeClass('btn-primary');
-                  $('#question_downvote_<%=responseArray[i]._id%>').addClass('btn-danger');
-                  $(".toast").toast('hide');
-                  $(".toast-downvote").toast({ delay: 5000 });
-                  $(".toast-downvote").toast('show');
-                }
-                $.ajax({
-                  url: '/vote/<%=responseArray[i]._id%>',
-                  type: "POST",
-                  data: {
-                    type: "downdoot",
-                    id: '<%=responseArray[i]._id%>'
-                  },
-                  success: function (data) {
-                    console.log(data);
-                    $("#tam_counter_<%=responseArray[i]._id%>").html(data.value + " Tams");
-                  }
-                });
-              });
-            });
-
-
-          </script>
-
-
-        </div>
-        <div class="col-lg-10">
-          <div class="card w-100">
-            <div class="card-body">
-              <p><%=responseArray[i].body%></p>
-              <br />
-              <p style="text-align: right;"><a href=""><%=responseArray[i].author%></a></p>
-              <p style="text-align: right;">Verified Tutor</p>
-              <% if(responseArray[i].author == user){ %>
-                <button class="btn btn-success float-right" style="text-align: right; visibility: visible;" id="edit_<%=responseArray[i]._id%>">Edit Response</button>
-              
-              <% } %>
-
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      
-      <script>
-      //Add Button modal javascript in here
-      $('#edit_<%=responseArray[i]._id%>').click(function(){
-        
-        $.ajax({url: '/edit-response/<%=responseArray[i]._id%>',
-      type:'GET',
-      success: function(data){
-        console.log(data.body);
-        $('#modal-edit-body').html(data.body);
-        $('#editmodal').modal('show');
-        $('#editform').attr('action', '/edit-response/<%=responseArray[i]._id%>');
-      }
-      })
-      });
-
-      </script>
-     
-
-      <% } %>
+                                            } else {
 
 
 
-      <div class="form-group" style="margin-top: 50px;">
-        <label for="responsetextarea">Your Solution</label>
-        <form action="/view-question/<%=questionID%>" method="POST" name="reply">
-          <textarea class="form-control" name="response" id="responsetextarea" cols="30" rows="5" style="resize: none;"
-            placeholder="Post Your Reply Here"></textarea>
-          <button class="btn btn-success" style="position: absolute; right: 10px; margin-top: 10px;">Post
+                                                $('#question_upvote_<%=responseArray[i]._id%>').removeClass('btn-primary');
+                                                $('#question_downvote_<%=responseArray[i]._id%>').addClass('btn-danger');
+                                                $(".toast").toast('hide');
+                                                $(".toast-downvote").toast({
+                                                    delay: 5000
+                                                });
+                                                $(".toast-downvote").toast('show');
+                                            }
+                                            $.ajax({
+                                                url: '/vote/<%=responseArray[i]._id%>',
+                                                type: "POST",
+                                                data: {
+                                                    type: "downdoot",
+                                                    id: '<%=responseArray[i]._id%>'
+                                                },
+                                                success: function(data) {
+                                                    console.log(data);
+                                                    $("#tam_counter_<%=responseArray[i]._id%>").html(data.value + " Tams");
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
+
+
+                            </div>
+                            <div class="col-lg-10">
+                                <div class="card w-100">
+                                    <div class="card-body">
+                                        <p>
+                                            <%=responseArray[i].body%>
+                                        </p>
+                                        <br />
+                                        <p style="text-align: right;">
+                                            <a href="">
+                                                <%=responseArray[i].author%>
+                                            </a>
+                                        </p>
+                                        <p style="text-align: right;">Verified Tutor</p>
+                                        <% if(responseArray[i].author == user){ %>
+                                            <button class="btn btn-success float-right" style="text-align: right; visibility: visible;" id="edit_<%=responseArray[i]._id%>">Edit Response</button>
+
+                                            <% } %>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <script>
+                            //Add Button modal javascript in here
+                            $('#edit_<%=responseArray[i]._id%>').click(function() {
+
+                                $.ajax({
+                                    url: '/edit-response/<%=responseArray[i]._id%>',
+                                    type: 'GET',
+                                    success: function(data) {
+                                        console.log(data.body);
+                                        $('#modal-edit-body').html(data.body);
+                                        $('#editmodal').modal('show');
+                                        $('#editform').attr('action', '/edit-response/<%=responseArray[i]._id%>');
+                                    }
+                                })
+                            });
+                        </script>
+
+
+                        <% } %>
+
+
+
+                            <div class="form-group" style="margin-top: 50px;">
+                                <label for="responsetextarea">Your Solution</label>
+                                <form action="/view-question/<%=questionID%>" method="POST" name="reply">
+                                    <textarea class="form-control" name="response" id="responsetextarea" cols="30" rows="5" style="resize: none;" placeholder="Post Your Reply Here"></textarea>
+                                    <button class="btn btn-success" style="position: absolute; right: 10px; margin-top: 10px;">Post
             Solution</button>
-        </form>
-        <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal"
-          style="position: absolute; left: 10px; margin-top: 10px;">Preview
+                                </form>
+                                <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal" style="position: absolute; left: 10px; margin-top: 10px;">Preview
           Solution</button>
 
 
-      </div>
-    </div>
+                            </div>
+                </div>
 
-  </div>
-  <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Response Preview</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        </div>
+        <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Response Preview</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modalbodytext"></p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          <p id="modalbodytext"></p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-    crossorigin="anonymous"></script>
-  <script type='text/javascript' src="/src/responsemodal.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+        <script type='text/javascript' src="/src/responsemodal.js"></script>
 </body>
 
 
