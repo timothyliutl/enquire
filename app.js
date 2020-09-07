@@ -496,7 +496,6 @@ app.post("/vote/:questionID", function (req, res) {
             if (req.body.type === "updoot") {
 
                 if (downvoteList.includes(username)) {
-                    console.log('pls work');
                     DBresponse.updateOne({ _id: responseID }, {
                         //  $inc: { upvotes: 2 },
                         $pull: { downvoteUsers: username },
@@ -509,7 +508,6 @@ app.post("/vote/:questionID", function (req, res) {
                     });
                     upvotes += 2;
                 } else if (!upvoteList.includes(username)) {
-                    console.log("juerhfd");
                     DBresponse.updateOne({ _id: responseID }, {
                         //  $inc: { upvotes: 1 },
                         $addToSet: { upvoteUsers: [username] },
