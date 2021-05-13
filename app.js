@@ -637,7 +637,7 @@ app.get("*", function(req, res) {
 });
 
 //Tells what port the website should be running on
-app.listen(3000, function() {
+app.listen(process.env.PORT||3000, function() {
     console.log("Server running on Port 3000");
 });
 //const in JS for things inside a variable aren't always constant, the variable itself just can't be reassigned
